@@ -1,0 +1,27 @@
+#settings_home{
+    background: #eef3b4;
+}
+#nodes_shower{
+    background: #a8daee;
+}
+#options_home{
+    background: #eac8f3;
+}
+#person{
+    background: #f6a7a7;
+}
+#event{
+    background: #ecab82;
+}
+#dialog{
+    background: #c2c37b;
+}
+#attribute{
+    background: #90d189;
+}
+.setting_button{
+    margin: 10px;
+    padding: 5px;
+    border: black;
+    border-radius: 5px;
+}

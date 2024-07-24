@@ -13,14 +13,21 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jqueryui": "^1.12.23",
+    "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.9.0",
     "source-map-loader": "^5.0.0",
+    "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
+    "jsplumb": "^2.15.6",
+    "uuid": "^10.0.0",
+    "uuidv4": "^6.2.13",
     "typescript": "^5.5.4",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "jquery": "^3.7.1",
     "jquery-ui-dist": "^1.13.3"
   }
