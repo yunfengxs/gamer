@@ -6,21 +6,18 @@
     <title>Your App Title</title>
 </head>
 <body>
-<div id="app"><!-- Your app content will be rendered here --></div>
-<div class="container-fluid">
+<div class="container-custom p-3">
     <div class="row">
-        <div class="col-lg-1">
-            <div id="settings_home"  ></div>
+        <div class="col-12 col-md-1 text-white p-3">
+            <div id="settings_home" style="background: #ecf1c4;" ></div>
         </div>
-        <div class="col-lg-9">
+        <div class="col-12 col-md-9 text-white p-3">
             <div id="nodes_shower"></div>
         </div>
-        <div class="col-lg-2" style="background: #c3dfef">
-            <div id="option_all" >
-                <div class="container">
-                    <div class="row-cols-6" style="height: 200px; overflow: auto; border: 3px solid black;"></div>
-                    <div id="options_home"></div>
-                </div>
+        <div class="col-12 col-md-2 text-white p-3">
+            <div >
+                <div id="options_shower" style="position: fixed;"></div>
+                <div id="options_home"></div>
             </div>
         </div>
     </div>

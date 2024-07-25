@@ -1,5 +1,12 @@
+.container-custom {
+    width: 98%;
+    max-width: 100%; /* 确保不会超过屏幕宽度 */
+    margin: 0 auto;
+    background: #dfdede;
+}
 #settings_home{
     box-sizing: border-box;
+    width: 7%;
     position: fixed;
     background: #ecf1c4;
     border-radius: 5px;
@@ -7,16 +14,30 @@
 #nodes_shower{
     box-sizing: border-box;
     background: #eefacd;
-    position: sticky;
     border-radius: 5px;
     height: 100vh;
 }
-#option_all{
-    box-sizing: border-box;
-    background: #c3dfef;
+#options_shower{
     position: fixed;
+    background: azure;
+    border-radius: 5px;
+    height: 33.33vh;
+    width: 13%;
+    overflow: auto;
+    min-width: 13%;
+    box-sizing: border-box;
+    display: inline-block; /* 确保div显示为块级元素 */
+    border: 2px solid black;
+}
+#options_home{
+    margin-top: 34.5vh;
+    padding: 4px;
+    position: fixed;
+    width: 13%;
+    border: 2px solid black;
     border-radius: 5px;
 }
+
 #person{
     background: #f6a7a7;
 }
@@ -37,16 +58,20 @@
     padding: 5px;
     border: black;
     border-radius: 5px;
+    background: gray;
 }
 .node_div{
     position: absolute;
     width: 300px;
     height: 120px;
-    border: 5px;
+    z-index: auto;
+    padding: 5px;
+    border: 2px solid white;
+    border-radius: 5px;
 }
 .item {
     position: absolute;
     height: 80px;
     width: 80px;
-    border: 1px solid blue;
+    border: 2px solid blue;
 }

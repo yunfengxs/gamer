@@ -1,4 +1,4 @@
-export function setJsplumb(jsplumbInstance:any, uuid_jsplumb:string) {
+export function SetJsplumb(jsplumbInstance:any, uuid_jsplumb:string) {
     /* global jsPlumb */
     // @ts-ignore
     jsplumbInstance.ready(function(){
