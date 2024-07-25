@@ -3,20 +3,16 @@ import $ from 'jquery'
 import './css/style.css'
 import 'jquery-ui-dist/jquery-ui'; // 注意这里引入的路径可能需要根据实际情况调整
 import 'bootstrap/dist/css/bootstrap.css'
-//import { jsPlumb }  from 'jsplumb';
 import { v4 as uuidv4 } from 'uuid';
 import {CreateElementWithid, CreateElementWithClasses, CreateElement} from "./ts/Utils/HtmlUtils";
 import {CreateNodeAndView, Person, SetOptions} from "./ts/Nodes/GameNode";
+import {jsPlumb} from "jsplumb";
 let settings = ["person","event","dialog","attribute"]
 
 export let game_node_map = new Map<string, any>();
-// // 使用 jQuery UI
-// $(function() {
-//     // jQuery UI 代码写在这里
-//     let name = $('#test').text()
-//     console.log(name)
-//     $('#settings_home').draggable(); // 示例：使元素可拖拽
-// });
+export const jsPlumbInstance = jsPlumb.getInstance()
+jsPlumbInstance.setContainer("nodes_shower")
+
 function init() {
     let settings_home:HTMLElement = document.getElementById("settings_home")!;
     for (const name of settings) {
@@ -36,11 +32,11 @@ function init() {
             let nodes_shower= document.getElementById("nodes_shower")!
             switch(name){
                 case "person":
-                    let new_node = new Person(uuid, "");
+                    //let new_node = new Person(uuid, "");            let per = new Person("1","", "2",12,"难")
+                    let new_node = new Person(uuid,"this is test node", "刘晓明",12,"直升飞机")
                     game_node_map.set(uuid,new_node)
-                    CreateNodeAndView(new_node, nodes_shower)
+                    CreateNodeAndView(jsPlumbInstance,  new_node, nodes_shower)
                     SetOptions(new_node,options_home)
-
                     break;
                 case "event":
                     break;
@@ -48,7 +44,7 @@ function init() {
                     break;
             }
 
-            let per = new Person("1","", "2",12,"难")
+
 
             console.log(name)
         }

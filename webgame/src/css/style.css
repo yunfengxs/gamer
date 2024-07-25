@@ -1,13 +1,26 @@
 #settings_home{
-    background: #eef3b4;
+    box-sizing: border-box;
+    position: fixed;
+    background: #ecf1c4;
+    border-radius: 5px;
 }
 #nodes_shower{
-    background: #a8daee;
+    box-sizing: border-box;
+    background: #eefacd;
+    position: sticky;
+    border-radius: 5px;
+    height: 100vh;
 }
-#options_home{
-    background: #eac8f3;
+#option_all{
+    box-sizing: border-box;
+    background: #c3dfef;
+    position: fixed;
+    border-radius: 5px;
 }
 #person{
+    background: #f6a7a7;
+}
+.person{
     background: #f6a7a7;
 }
 #event{
@@ -24,4 +37,16 @@
     padding: 5px;
     border: black;
     border-radius: 5px;
+}
+.node_div{
+    position: absolute;
+    width: 300px;
+    height: 120px;
+    border: 5px;
+}
+.item {
+    position: absolute;
+    height: 80px;
+    width: 80px;
+    border: 1px solid blue;
 }

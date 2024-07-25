@@ -19,9 +19,21 @@ export function CreateElementWithid(tag:string, id:string, innerText:string, fat
     element.id = id
     return element
 }
-export function CreateTextInput(id:string, name:string, fatherId:HTMLElement) {
+export function CreateTextInput(id:string, name:string, value:string, fatherId:HTMLElement) {
     let input_button:HTMLInputElement = CreateElementWithClasses("input","", fatherId,["form-control"]) as HTMLInputElement
     input_button.type="text"
+    input_button.value=value
+    input_button.id = id+"_"+name+"_input"
+}
+export function CreateTextsInput(id:string, name:string, value:string, fatherId:HTMLElement) {
+    let input_button:HTMLElement = CreateElementWithClasses("textarea","", fatherId, ["form-control"]);
+    input_button.id = id+"_"+name+"_input"
+    input_button.innerText = value
+}
+export function CreateNumberInput(id:string, name:string,value:number, fatherId:HTMLElement) {
+    let input_button:HTMLInputElement = CreateElementWithClasses("input","", fatherId,["form-control"]) as HTMLInputElement
+    input_button.type="number"
+    input_button.value=String(value)
     input_button.id = id+"_"+name+"_input"
 }
 
@@ -33,16 +45,16 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
         const before = CreateElementWithClasses("div", "", div, ["input-group-prepend"])
         switch (type) {
             case "string":
-                CreateTextInput(id, name, div)
+                CreateTextInput(id, name, game_node_map.get(id)[name], div)
                 break;
             case "number":
-                CreateNumberInput(id, name, div)
+                CreateNumberInput(id, name,game_node_map.get(id)[name], div)
                 break;
             // case "enums":
             //     CreateSelectInput(id, name, name, div)
             //     break;
             case "texts":
-                CreateTextsInput(id, name, div)
+                CreateTextsInput(id, name, game_node_map.get(id)[name], div)
                 break;
             default:
                 ;
@@ -64,24 +76,6 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
         });
         CreateElement("br", "", div);
     }
-}
-export function CreateTextsInput(id:string, name:string, fatherId:HTMLElement) {
-    let input_button:HTMLElement = CreateElementWithClasses("textarea","", fatherId, ["form-control"]);
-    input_button.id = id+"_"+name+"_input"
-    //
-    //
-    // const div = CreateElementWithClasses("div", "" ,fatherId,["input_row"]);
-    // const before = CreateElementWithClasses("div",name,div,["input-group-prepend"])
-    // CreateElement("textarea","",div);
-    // const after=CreateElementWithClasses("div",name,div,["input-group-append"])
-    // CreateElementWithClasses("text", name ,before,["name_text"]);
-    // CreateElementWithClasses("button","ok",after,["ok_button"]);
-    // CreateElement("br","",div,);
-}
-export function CreateNumberInput(id:string, name:string, fatherId:HTMLElement) {
-    let input_button:HTMLInputElement = CreateElementWithClasses("input","", fatherId,["form-control"]) as HTMLInputElement
-    input_button.type="number"
-    input_button.id = id+"_"+name+"_input"
 }
 
 export function CreateSelectInput(name:string, options: string[], fatherId:HTMLElement) {
