@@ -14,7 +14,6 @@ export function SetJsplumb(jsplumbInstance:any, uuid_jsplumb:string) {
             connector: ['Straight'],
             maxConnections: -1,
         }
-        console.log(uuid_jsplumb)
         jsplumbInstance.draggable(uuid_jsplumb)
         jsplumbInstance.addEndpoint(uuid_jsplumb, {
             anchors: ['Bottom'],

@@ -37,7 +37,15 @@
     border: 2px solid black;
     border-radius: 5px;
 }
+#Begin{
+    background: #90ffb4;
+    min-width: 100px;
+    min-height: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+}
 #person{
     background: #f6a7a7;
 }
@@ -53,6 +61,17 @@
 #attribute{
     background: #90d189;
 }
+.node_div{
+    position: absolute;
+    min-width: 120px;
+    min-height: 74px;
+    z-index: auto;
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 14px;
+    text-align: center;
+    margin: 0 auto;
+}
 .setting_button{
     margin: 10px;
     padding: 5px;
@@ -60,18 +79,10 @@
     border-radius: 5px;
     background: gray;
 }
-.node_div{
-    position: absolute;
-    width: 300px;
-    height: 120px;
-    z-index: auto;
-    padding: 5px;
-    border: 2px solid white;
-    border-radius: 5px;
+.node_name{
+    font-size: large;
+    font-weight: bold;
 }
-.item {
-    position: absolute;
-    height: 80px;
-    width: 80px;
-    border: 2px solid blue;
+.node_description{
+    font-size: small;
 }

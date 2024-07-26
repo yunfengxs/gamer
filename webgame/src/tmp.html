@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端模块示例</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        .row-item {
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            cursor: move;
+        }
+        .form-control {
+            margin: 0 5px;
+        }
+        .btn, .drag-handle, .form-control {
+            height: 38px; /* 使所有元素高度一致 */
+        }
+        .drag-handle {
+            cursor: move;
+            display: inline-block;
+            padding: 0 10px;
+            background: #ccc;
+            text-align: center;
+            line-height: 38px; /* 使图标垂直居中 */
+        }
+    </style>
+</head>
+<body>
+<div class="container text-center">
+    <textarea id="exportArea" readonly class="form-control mb-2" style="height: 150px;"></textarea>
+    <button id="editBtn" class="btn btn-secondary mb-2">修改</button>
+    <div id="rowsContainer" style="display: none;"></div>
+</div>
+
+<!-- 模态框 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">编辑数据</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button id="addRowBtn" class="btn btn-primary mb-2">添加</button>
+                <div id="modalRowsContainer"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-success" id="saveBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    let rowCount = 0;
+
+    function addRow(containerId, data = {inputValue: '', textareaValue: ''}) {
+        const container = document.getElementById(containerId);
+        const rows = container.querySelectorAll('.row-item');
+        const newIndex = rows.length + 1;
+
+        // 创建新的行
+        const newRow = document.createElement('div');
+        newRow.className = 'row-item';
+        newRow.dataset.index = newIndex;
+
+        // 添加序号文本
+        const serialNumber = document.createElement('div');
+        serialNumber.className = 'col-1 serial-number';
+        serialNumber.textContent = `${newIndex}: `;
+        newRow.appendChild(serialNumber);
+
+        // 添加输出框
+        const outputBox = document.createElement('input');
+        outputBox.type = 'text';
+        outputBox.className = 'form-control col-2';
+        outputBox.value = data.inputValue;
+        newRow.appendChild(outputBox);
+
+        // 添加 textarea
+        const textArea = document.createElement('textarea');
+        textArea.className = 'form-control col';
+        textArea.value = data.textareaValue;
+        newRow.appendChild(textArea);
+
+        // 添加删除按钮
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger col-1';
+        deleteBtn.textContent = '删除';
+        deleteBtn.addEventListener('click', () => {
+            newRow.remove();
+            updateSerialNumbers(containerId);
+        });
+        newRow.appendChild(deleteBtn);
+
+        // 添加拖动把手
+        const dragHandle = document.createElement('div');
+        dragHandle.className = 'drag-handle col-1';
+        dragHandle.textContent = '≡';
+        newRow.appendChild(dragHandle);
+
+        // 插入新的行在指定容器中
+        container.appendChild(newRow);
+
+        // 使行可拖动
+        $(container).sortable({
+            handle: '.drag-handle',
+            axis: 'y',
+            stop: () => updateSerialNumbers(containerId)
+        }).disableSelection();
+    }
+
+    function updateSerialNumbers(containerId) {
+        const rows = document.querySelectorAll(`#${containerId} .row-item`);
+        rows.forEach((row, index) => {
+            row.querySelector('.serial-number').textContent = `${index + 1}: `;
+            row.dataset.index = index + 1;
+        });
+    }
+
+    function exportData() {
+        const rows = document.querySelectorAll('#rowsContainer .row-item');
+        const data = Array.from(rows).map((row, index) => {
+            const input = row.querySelector('input').value;
+            const textarea = row.querySelector('textarea').value;
+            return `序号 ${index + 1}: ${input}, ${textarea}`;
+        });
+        document.getElementById('exportArea').value = data.join(' | ');
+    }
+
+    function restoreData() {
+        const container = document.getElementById('rowsContainer');
+        container.innerHTML = '';
+
+        const data = document.getElementById('exportArea').value.split(' | ');
+        data.forEach(rowData => {
+            const matches = rowData.match(/\d+: (.*), (.*)/);
+            if (matches) {
+                addRow('rowsContainer', { inputValue: matches[1], textareaValue: matches[2] });
+            }
+        });
+        updateSerialNumbers('rowsContainer');
+    }
+
+    function openEditModal() {
+        const container = document.getElementById('modalRowsContainer');
+        container.innerHTML = '';
+
+        const data = document.getElementById('exportArea').value.split(' | ');
+        data.forEach(rowData => {
+            const matches = rowData.match(/\d+: (.*), (.*)/);
+            if (matches) {
+                addRow('modalRowsContainer', { inputValue: matches[1], textareaValue: matches[2] });
+            }
+        });
+        updateSerialNumbers('modalRowsContainer');
+        $('#editModal').modal('show');
+    }
+
+    function saveData() {
+        const modalRows = document.querySelectorAll('#modalRowsContainer .row-item');
+        let hasEmptyFields = false;
+
+        modalRows.forEach(row => {
+            const input = row.querySelector('input').value.trim();
+            const textarea = row.querySelector('textarea').value.trim();
+            if (!input || !textarea) {
+                hasEmptyFields = true;
+            }
+        });
+
+        if (hasEmptyFields) {
+            alert('所有字段都是必填的，请填写完整再保存。');
+            return;
+        }
+
+        const container = document.getElementById('rowsContainer');
+        container.innerHTML = '';
+
+        modalRows.forEach(row => {
+            const input = row.querySelector('input').value;
+            const textarea = row.querySelector('textarea').value;
+            addRow('rowsContainer', { inputValue: input, textareaValue: textarea });
+        });
+
+        updateSerialNumbers('rowsContainer');
+        exportData();
+        $('#editModal').modal('hide');
+    }
+
+    document.getElementById('addRowBtn').addEventListener('click', () => addRow('modalRowsContainer'));
+    document.getElementById('editBtn').addEventListener('click', openEditModal);
+    document.getElementById('saveBtn').addEventListener('click', saveData);
+    document.addEventListener('DOMContentLoaded', restoreData);
+</script>
+</body>
+</html>

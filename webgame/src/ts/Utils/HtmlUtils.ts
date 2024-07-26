@@ -1,4 +1,5 @@
 import {game_node_map} from '../../index'
+import {Refresh} from '../Nodes/GameNode'
 export function CreateElement(tag:string, innerText:string, father:HTMLElement) {
     var element = document.createElement(tag)
     element.innerText = innerText
@@ -10,6 +11,11 @@ export function CreateElementWithClasses(tag:string, innerText:string, father:HT
     for (const oneClass of classes) {
         element.classList.add(oneClass)
     }
+    return element
+}
+export function CreateElementWithIdAndClasses(tag:string, id:string,innerText:string, father:HTMLElement, classes:Array<string>) {
+    let element = CreateElementWithClasses(tag, innerText, father,classes)
+    element.id=id
     return element
 }
 
@@ -36,9 +42,36 @@ export function CreateNumberInput(id:string, name:string,value:number, fatherId:
     input_button.value=String(value)
     input_button.id = id+"_"+name+"_input"
 }
+export function CreateDialogInput(id:string, name:string, value:string, fatherId:HTMLElement) {
+    let input_button:HTMLInputElement = CreateElementWithClasses("input","", fatherId,["form-control"]) as HTMLInputElement
+    input_button.type="text"
+    input_button.value=value
+    input_button.id = id+"_"+name+"_input"
+}
 
+export function CreateOneDialog(id:string, name:string, type:string, fatherId:HTMLElement) {
+    const div = CreateElementWithClasses("form", "", fatherId, ["input-group", "mb-3"]);
+    const before = CreateElementWithClasses("div", "", div, ["input-group-prepend"])
+    CreateTextInput(id, name, game_node_map.get(id)[name], div)
+    const after = CreateElementWithClasses("div", "", div, ["input-group-append"])
+    CreateElementWithClasses("span", "+", before, ["input-group-text"]);
+    let submit = CreateElementWithClasses("button", "ok", after, ["input-group-text"]) as HTMLButtonElement;
+    div.addEventListener('submit', function (event: Event) {
+        event.preventDefault()
+        let content = document.getElementById(id + "_" + name + "_input")! as HTMLInputElement
+        if(type == "number") {
+            game_node_map.get(id)[name] = Number(content.value)
+        } else {
+            game_node_map.get(id)[name] = content.value
+        }
+        Refresh(id)
+    });
+    CreateElement("br", "", div);
+}
 export function CreateInput(id:string, name:string, type:string, fatherId:HTMLElement) {
     if (type == "show") {
+
+    } else if(type == "dialog") {
 
     } else {
         const div = CreateElementWithClasses("form", "", fatherId, ["input-group", "mb-3"]);
@@ -56,6 +89,9 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
             case "texts":
                 CreateTextsInput(id, name, game_node_map.get(id)[name], div)
                 break;
+            case "dialog":
+                CreateDialogInput(id, name, game_node_map.get(id)[name], div)
+                break;
             default:
                 ;
         }
@@ -64,15 +100,13 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
         let submit = CreateElementWithClasses("button", "ok", after, ["input-group-text"]) as HTMLButtonElement;
         div.addEventListener('submit', function (event: Event) {
             event.preventDefault()
-            console.log(id + "_" + name + "_input")
             let content = document.getElementById(id + "_" + name + "_input")! as HTMLInputElement
-            console.log(content.value)
             if(type == "number") {
                 game_node_map.get(id)[name] = Number(content.value)
             } else {
                 game_node_map.get(id)[name] = content.value
             }
-            console.log(game_node_map)
+            Refresh(id)
         });
         CreateElement("br", "", div);
     }

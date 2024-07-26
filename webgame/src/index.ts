@@ -5,37 +5,41 @@ import 'jquery-ui-dist/jquery-ui'; // 注意这里引入的路径可能需要根
 import 'bootstrap/dist/css/bootstrap.css'
 import { v4 as uuidv4 } from 'uuid';
 import {CreateElementWithid, CreateElementWithClasses, CreateElement} from "./ts/Utils/HtmlUtils";
-import {Begin, CreateNodeAndView, GameNode, Person, SetOptions} from "./ts/Nodes/GameNode";
+import {BeginNode, CreateNodeAndView, DialogNode, PersonNode, SetOptions} from "./ts/Nodes/GameNode";
 import {jsPlumb} from "jsplumb";
 import {SetJsplumb} from "./ts/Utils/JsplumbUtils";
+import {GameNode} from "./ts/Nodes/GameNodeItf";
 let settings = ["person","event","dialog","attribute"]
 
 export let game_node_map = new Map<string, any>();
 export const jsPlumbInstance = jsPlumb.getInstance()
 jsPlumbInstance.setContainer("nodes_shower")
+let all_container = document.getElementById("all_container")!;
 let settings_home:HTMLElement = document.getElementById("settings_home")!;
 let options_home= document.getElementById("options_home")!
 let nodes_shower= document.getElementById("nodes_shower")!
 
-
-function  AddNewNodeDiv(node:GameNode, left:number, top:number)
+function AddNewNodeDiv(node:GameNode, left:number, top:number)
 {
-    game_node_map.set(node.id,node)
+    game_node_map.set(node.id, node)
     let this_node = CreateNodeAndView(node, nodes_shower)
     SetOptions(node,options_home)
     this_node.style.left = left+"px"
     this_node.style.top = top+"px"
+    console.log("@@@@@@@@"+node.id)
     SetJsplumb(jsPlumbInstance, node.id)
 }
 
 function InitBegin() {
-    const uuid = uuidv4()
-    let new_node = new Begin(uuid,"this is test node")
-    AddNewNodeDiv(new_node,0,0)
+    let new_node = new BeginNode("Begin","Game Begin")
+    console.log(new_node.getId())
+    AddNewNodeDiv(new_node,
+        nodes_shower.offsetWidth / 1.7,
+        60)
 }
 
 function init() {
-
+    InitBegin()
     for (const name of settings) {
         var setting = CreateElementWithid("div",name, name, settings_home)
         setting.classList.add("setting_button");
@@ -63,10 +67,14 @@ function init() {
             switch(name){
                 case "person":
                     //let new_node = new Person(uuid, "");            let per = new Person("1","", "2",12,"难")
-                    let new_node = new Person(uuid,"this is test node", "刘晓明",12,"直升飞机")
-                    AddNewNodeDiv(new_node, xPos, yPos)
+                    let person = new PersonNode(uuid,"this is test node", "刘晓明",12,"直升飞机")
+                    AddNewNodeDiv(person, xPos, yPos)
                     break;
                 case "event":
+                    break;
+                case "dialog":
+                    let dialog = new DialogNode(uuid,"this is dialog", )
+                    AddNewNodeDiv(dialog, xPos, yPos)
                     break;
                 default:
                     break;
