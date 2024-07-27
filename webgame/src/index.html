@@ -7,38 +7,16 @@
 </head>
 <body>
 <div id="all_container" class="container-custom p-3">
-    <!-- 模态框 -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">编辑数据</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <button id="addRowBtn" class="btn btn-primary mb-2">添加</button>
-                    <div id="modalRowsContainer"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-success" id="saveBtn">保存</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-12 col-md-1">
             <div id="settings_home" style="background: #ecf1c4;"></div>
         </div>
-        <div class="col-12 col-md-9">
+        <div class="col-12 col-md-8">
             <div id="nodes_shower"></div>
         </div>
-        <div class="col-12 col-md-2">
+        <div class="col-12 col-md-3">
             <div >
-                <textarea id="exportArea" readonly class="form-control mb-2" style="height: 150px;"></textarea>
-                <button id="editBtn" class="btn btn-secondary mb-2">修改</button>
                 <div id="rowsContainer" style="display: none;"></div>
-                <br/>
                 <div id="options_shower" style="position: fixed;"></div>
                 <div id="options_home"></div>
 
@@ -46,7 +24,25 @@
         </div>
     </div>
 </div>
-
+<!-- 模态框 -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">编辑数据</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <button id="addRowBtn" class="btn btn-primary mb-2">添加</button>
+                <div id="modalRowsContainer"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-success" id="saveBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <style>
 </style>

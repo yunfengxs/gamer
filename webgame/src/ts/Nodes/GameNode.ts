@@ -43,7 +43,6 @@ export class BaseNode implements GameNode{
     }
 
     constructor(id:string, desc:string) {
-        console.log("^^^^^^^^^^^^" + id)
         this.id = id;
         this.desc = desc;
         this.params.set("desc","string")
@@ -80,17 +79,26 @@ export class PersonNode extends BaseNode{
         this.params.set("sexes","enums")
     }
 }
-
+export class GameDialog{
+    constructor(speaker: string, conversation: string[]) {
+        this.speaker = speaker;
+        this.conversation = conversation;
+    }
+    speaker:string = ""
+    conversation:string[] = new Array
+}
 export class DialogNode extends BaseNode{
-    dialogs: string[] = Array();
+    dialogs: GameDialog[] = Array();
     type:string = "dialog"
 
     getType(): string {
         return this.type;
     }
-
-    getDialog():string[] {
+    getDialog():GameDialog[] {
         return this.dialogs;
+    }
+    setDialog(dialog:GameDialog[]) {
+        this.dialogs = dialog;
     }
     constructor(id:string, desc:string, dialogs?:string[]) {
         super(id,desc)

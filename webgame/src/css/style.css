@@ -22,7 +22,7 @@
     background: azure;
     border-radius: 5px;
     height: 33.33vh;
-    width: 13%;
+    width: 23%;
     overflow: auto;
     min-width: 13%;
     box-sizing: border-box;
@@ -33,7 +33,7 @@
     margin-top: 34.5vh;
     padding: 4px;
     position: fixed;
-    width: 13%;
+    width: 23%;
     border: 2px solid black;
     border-radius: 5px;
 }

@@ -1,5 +1,6 @@
 import {game_node_map} from '../../index'
 import {Refresh} from '../Nodes/GameNode'
+import {openEditModal} from "./ModalDiv";
 export function CreateElement(tag:string, innerText:string, father:HTMLElement) {
     var element = document.createElement(tag)
     element.innerText = innerText
@@ -42,38 +43,17 @@ export function CreateNumberInput(id:string, name:string,value:number, fatherId:
     input_button.value=String(value)
     input_button.id = id+"_"+name+"_input"
 }
-export function CreateDialogInput(id:string, name:string, value:string, fatherId:HTMLElement) {
-    let input_button:HTMLInputElement = CreateElementWithClasses("input","", fatherId,["form-control"]) as HTMLInputElement
-    input_button.type="text"
-    input_button.value=value
-    input_button.id = id+"_"+name+"_input"
-}
-
-export function CreateOneDialog(id:string, name:string, type:string, fatherId:HTMLElement) {
-    const div = CreateElementWithClasses("form", "", fatherId, ["input-group", "mb-3"]);
-    const before = CreateElementWithClasses("div", "", div, ["input-group-prepend"])
-    CreateTextInput(id, name, game_node_map.get(id)[name], div)
-    const after = CreateElementWithClasses("div", "", div, ["input-group-append"])
-    CreateElementWithClasses("span", "+", before, ["input-group-text"]);
-    let submit = CreateElementWithClasses("button", "ok", after, ["input-group-text"]) as HTMLButtonElement;
-    div.addEventListener('submit', function (event: Event) {
-        event.preventDefault()
-        let content = document.getElementById(id + "_" + name + "_input")! as HTMLInputElement
-        if(type == "number") {
-            game_node_map.get(id)[name] = Number(content.value)
-        } else {
-            game_node_map.get(id)[name] = content.value
-        }
-        Refresh(id)
-    });
-    CreateElement("br", "", div);
+export function CreateDialogInput(id:string, name:string, fatherId:HTMLElement) {
+    CreateElementWithClasses("button","编辑",fatherId,["form-control"]).addEventListener("click", () => openEditModal(id))
 }
 export function CreateInput(id:string, name:string, type:string, fatherId:HTMLElement) {
     if (type == "show") {
 
     } else if(type == "dialog") {
-
+        console.log("sadasdasdfdfdsf")
+        CreateDialogInput(id, name, fatherId)
     } else {
+        console.log(type + "@@@@@")
         const div = CreateElementWithClasses("form", "", fatherId, ["input-group", "mb-3"]);
         const before = CreateElementWithClasses("div", "", div, ["input-group-prepend"])
         switch (type) {
@@ -88,9 +68,6 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
             //     break;
             case "texts":
                 CreateTextsInput(id, name, game_node_map.get(id)[name], div)
-                break;
-            case "dialog":
-                CreateDialogInput(id, name, game_node_map.get(id)[name], div)
                 break;
             default:
                 ;

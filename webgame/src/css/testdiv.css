@@ -16,6 +16,7 @@ body {
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
     cursor: move;
 }
@@ -29,6 +30,7 @@ body {
     cursor: move;
     display: inline-block;
     padding: 0 10px;
+    margin: 0 5px;
     background: #ccc;
     text-align: center;
     line-height: 38px; /* 使图标垂直居中 */
