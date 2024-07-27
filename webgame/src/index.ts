@@ -6,15 +6,16 @@ import 'jquery-ui-dist/jquery-ui'; // 注意这里引入的路径可能需要根
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { v4 as uuidv4 } from 'uuid';
-import {CreateElementWithid, CreateElementWithClasses, CreateElement} from "./ts/Utils/HtmlUtils";
+import {CreateElementWithid, CreateElementWithClasses, CreateElement, SetCompPosition} from "./ts/Utils/HtmlUtils";
 import {BeginNode, CreateNodeAndView, DialogNode, PersonNode, SetOptions} from "./ts/Nodes/GameNode";
 import {jsPlumb} from "jsplumb";
-import {SetJsplumb} from "./ts/Utils/JsplumbUtils";
+import {ClearJsplumb, InitJsPlumb, SetConnectionJsplumb, SetJsplumb} from "./ts/Utils/JsplumbUtils";
 import {GameNode} from "./ts/Nodes/GameNodeItf";
-import {addRow, openEditModal, restoreData, saveData} from "./ts/Utils/ModalDiv";
+import {addRow, openEditModal, saveData} from "./ts/Utils/ModalDiv";
 let settings = ["person","event","dialog","attribute"]
 
 export let game_node_map = new Map<string, any>();
+export let game_node_map_loaded = new Map<string, any>();
 export const jsPlumbInstance = jsPlumb.getInstance()
 jsPlumbInstance.setContainer("nodes_shower")
 let all_container = document.getElementById("all_container")!;
@@ -39,10 +40,27 @@ function InitBeginNode() {
         nodes_shower.offsetWidth / 1.7,
         60)
 }
+
+function SaveFile(){
+    let jsons = "["
+    game_node_map.forEach((value, key) => {
+        jsons += JSON.stringify(value) + ","
+    });
+    const replaced = jsons.replace(/.$/, ']');
+    // 创建一个a标签
+    const link = document.createElement('a');
+    link.download = 'out_put.json'; // 设置文件名
+    link.href = URL.createObjectURL(new Blob([replaced], { type: 'text/plain' })); // 设置文件内容
+    link.click(); // 模拟点击下载链接
+}
 function InitSettings(){
+    CreateElementWithClasses("div","save",settings_home,["setting_button","save_bt"]).addEventListener("click",SaveFile)
+    CreateElementWithClasses("div","load",settings_home,["setting_button","load_bt"]).addEventListener("click",LoadFromFile)
+    CreateElement("hr","",settings_home)
     for (const name of settings) {
         var setting = CreateElementWithid("div",name, name, settings_home)
         setting.classList.add("setting_button");
+        setting.classList.add(name)
         $("#"+name).draggable({
             helper:"clone",
             scope:"setting",
@@ -94,4 +112,68 @@ function InitModals() {
 document.addEventListener('DOMContentLoaded', () => {
     InitModals()
     InitNodesView()
+    InitJsPlumb(jsPlumbInstance)
 });
+
+
+function LoadClearAll(){
+    game_node_map.forEach((value, key) => {
+        ClearJsplumb(jsPlumbInstance, key)
+    })
+}
+
+
+function breadthFirstTraversal(root: GameNode) {
+    const queue: GameNode[] = [root];
+    let nodeIdMap = new Map()
+    let lastNode = ""
+    let addedchile:string[] = []
+    while (queue.length > 0) {
+        const nodeOne:GameNode = queue.shift() as GameNode;
+        AddNewNodeDiv(nodeOne, 0,0)
+        SetCompPosition(nodeOne, lastNode , "load")
+        SetJsplumb(jsPlumbInstance, nodeOne.id)
+        if (nodeOne.id) {
+            for (const child of nodeOne.getChildrenNodeIds()!) {
+                if(addedchile.indexOf(child) == -1){
+                    queue.push(game_node_map_loaded.get(child));
+                    addedchile.push(child)
+                }
+                nodeIdMap.set(nodeOne.id, child)
+            }
+        }
+        lastNode = nodeOne.id
+    }
+    nodeIdMap.forEach((value, key) => {
+        SetConnectionJsplumb(jsPlumbInstance, key, value)
+    })
+}
+
+function LoadFromFile() {
+    // 创建一个input标签
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json'; // 限制只能选择json文件
+    input.onchange = () => {
+        const file = input.files![0];
+        const reader = new FileReader();
+        // 读取文件内容
+        reader.readAsText(file);
+        reader.onload = () => {
+            let str = reader.result
+            if (typeof str === "string") {
+                let nodes: GameNode[] = JSON.parse(str)
+                if (nodes.length >= 0) {
+                    LoadClearAll()
+                    for (const nodesKey in nodes) {
+                        let nodeOne: GameNode = nodes[nodesKey] as GameNode
+                        game_node_map_loaded.set(nodeOne.id, nodeOne)
+                    }
+                    let rootNode:GameNode = game_node_map_loaded.get("Begin")!
+                    breadthFirstTraversal(rootNode)
+                }
+            }
+        };
+    };
+    input.click(); // 模拟点击选择文件
+}

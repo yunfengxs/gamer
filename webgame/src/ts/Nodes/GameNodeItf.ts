@@ -3,13 +3,13 @@ export interface GameNode{
     desc:string
     type:string
     params : Map<any,string>;
-    parentNode:GameNode|undefined
-    children:GameNode[]|undefined
+    parentNodeIds:string[]|undefined
+    childrenNodeIds:string[]|undefined
 
     getType(): string;
     getDesc(): string;
     getId(): string;
     getParams(): Map<any,string>;
-    getParentNode() : GameNode|undefined;
-    getChildren() : GameNode[]|undefined;
+    getParentNodeIds() : string[]|undefined;
+    getChildrenNodeIds() : string[]|undefined;
 }

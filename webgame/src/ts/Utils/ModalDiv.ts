@@ -1,18 +1,18 @@
 import $ from 'jquery'
 import Modal from "bootstrap/js/dist/modal";
-import {GameDialog} from "../Nodes/GameNode";
+import {DialogNode, GameDialog} from "../Nodes/GameNode";
 import {game_node_map} from "../../index";
 import {CreateElement, CreateElementWithClasses} from "./HtmlUtils";
-import '../../css/testdiv.css'
+import '../../css/modal_dialog.css'
 
 let contextShower = document.getElementById('options_shower') as HTMLElement;
 
 export function openEditModal(id:string) {
     const container = document.getElementById('modalRowsContainer') as HTMLElement;
     container.innerHTML = '';
-    let dialogs:GameDialog[] = game_node_map.get(id).dialogs
+    let dialogs:GameDialog[] = (game_node_map.get(id) as DialogNode).dialogs
     dialogs.forEach(rowData => {
-        addRow('modalRowsContainer', { inputValue: rowData.speaker, textareaValue: rowData.conversation.toString()});
+        addRow('modalRowsContainer', { inputValue: rowData.speaker, textareaValue: rowData.conversation.join('\n')});
     });
     updateSerialNumbers('modalRowsContainer');
     const editModalElement = document.getElementById('editModal');
@@ -41,7 +41,6 @@ export function saveData() {
         alert('所有字段都是必填的，请填写完整再保存。');
         return;
     }
-
     const container = document.getElementById('rowsContainer') as HTMLElement;
     container.innerHTML = '';
 
@@ -50,39 +49,34 @@ export function saveData() {
         const textarea = (row.querySelector('textarea') as HTMLTextAreaElement).value;
         addRow('rowsContainer', { inputValue: input, textareaValue: textarea });
     });
-
     updateSerialNumbers('rowsContainer');
     exportData(title);
-
     if (editModalElement) {
         const editModal = Modal.getInstance(editModalElement);
         editModal?.hide();
     }
 }
-
-let rowCount = 0;
-
 export function addRow(containerId: string, data = { inputValue: '', textareaValue: '' }) {
     const container = document.getElementById(containerId) as HTMLElement;
     const rows = container.querySelectorAll('.row-item');
     const newIndex = rows.length + 1;
     const newRow = CreateElementWithClasses("div","", container,["row","row-item","d-flex","mb-2"])
     newRow.dataset.index = newIndex.toString();
-    const serialNumber = CreateElementWithClasses("div", `${newIndex}`, newRow,["col-1", "serial-number"])
+    const serialNumber = CreateElementWithClasses("div", `${newIndex}`, newRow,["serial-number", "bb"])
     serialNumber.textContent = `${newIndex}`;
-    const in_div = CreateElementWithClasses("div","", newRow,["col-2"])
-    const outputBox:HTMLInputElement = CreateElementWithClasses("input","", in_div, ["form-control", "col-2"]) as HTMLInputElement;
+    const in_div = CreateElementWithClasses("div","", newRow,["cc"])
+    const outputBox:HTMLInputElement = CreateElementWithClasses("input","", in_div, ["form-control"]) as HTMLInputElement;
     outputBox.type = 'text';
     outputBox.value = data.inputValue;
-    const text_div = CreateElementWithClasses("div","", newRow,["col-7"])
+    const text_div = CreateElementWithClasses("div","", newRow,["dd"])
     const textArea:HTMLTextAreaElement = CreateElementWithClasses("textarea","", text_div, ["form-control"]) as HTMLTextAreaElement;
     textArea.value = data.textareaValue;
-    const deleteBtn:HTMLButtonElement = CreateElementWithClasses("button","删除", newRow, ["btn", "btn-danger", "col-1"]) as HTMLButtonElement;
+    const deleteBtn:HTMLButtonElement = CreateElementWithClasses("button","删除", newRow, ["btn", "btn-danger", "ee"]) as HTMLButtonElement;
     deleteBtn.addEventListener('click', () => {
         newRow.remove();
         updateSerialNumbers(containerId);
     });
-    const dragHandle = CreateElementWithClasses("div","≡", newRow,["drag-handle", "btn", "col-1"])
+    const dragHandle = CreateElementWithClasses("div","≡", newRow,["drag-handle", "btn","ff"])
     $(`#${containerId}`).sortable({
         handle: '.drag-handle',
         axis: 'y',
@@ -99,10 +93,10 @@ function updateSerialNumbers(containerId: string) {
 }
 function UpdateDialogContext(id:string) {
     contextShower.innerHTML = ""
-    for (const dialogOne of game_node_map.get(id).getDialog()){
-        let oneline = CreateElement("div","", contextShower)!
-        CreateElement("text",dialogOne.speaker, oneline)
-        CreateElementWithClasses("text",dialogOne.conversation, oneline,["option_show"])
+    for (const dialogOne of (game_node_map.get(id) as DialogNode).getDialog()){
+        let oneline = CreateElementWithClasses("div","", contextShower,["row"])!
+        CreateElementWithClasses("text",dialogOne.speaker, oneline,["col-2"])
+        CreateElementWithClasses("pre",dialogOne.conversation.join('\n'),oneline,["option_show", "col-10"])
     }
 }
 function exportData(id:string) {
@@ -114,21 +108,6 @@ function exportData(id:string) {
         const textarea = (row.querySelector('textarea') as HTMLTextAreaElement).value.split('\n');
         return new GameDialog(input,textarea);
     });
-    console.log(data)
-    game_node_map.get(id).setDialog(data)
+    (game_node_map.get(id) as DialogNode).setDialog(data)
     UpdateDialogContext(id)
-}
-
-export function restoreData() {
-    const container = document.getElementById('rowsContainer') as HTMLElement;
-    container.innerHTML = '';
-
-    const data = (document.getElementById('exportArea') as HTMLTextAreaElement).value.split(' | ');
-    data.forEach(rowData => {
-        const matches = rowData.match(/序号 \d+: (.*), (.*)/);
-        if (matches) {
-            addRow('rowsContainer', { inputValue: matches[1], textareaValue: matches[2] });
-        }
-    });
-    updateSerialNumbers('rowsContainer');
 }

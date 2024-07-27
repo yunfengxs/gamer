@@ -11,8 +11,8 @@ body {
     width: 100%;
 }
 .row-item {
-    margin-bottom: 10px;
-    padding: 5px;
+    margin-bottom: 3px;
+    padding: 2px;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     display: flex;
@@ -21,7 +21,7 @@ body {
     cursor: move;
 }
 .form-control {
-    margin: 0 5px;
+    margin: 0 2px;
 }
 .btn, .drag-handle, .form-control {
     height: 38px; /* 使所有元素高度一致 */
@@ -29,9 +29,24 @@ body {
 .drag-handle {
     cursor: move;
     display: inline-block;
-    padding: 0 10px;
-    margin: 0 5px;
+    padding: 0px;
+    margin: 0 6px 0 2px;
     background: #ccc;
     text-align: center;
     line-height: 38px; /* 使图标垂直居中 */
+}
+.bb{
+    width: 4%;
+}
+.cc{
+    width: 15%;
+}
+.dd{
+    width: 66%
+}
+.ee{
+    width: 9%;
+}
+.ff{
+    width: 5%;
 }

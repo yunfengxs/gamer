@@ -7,6 +7,7 @@
 #settings_home{
     box-sizing: border-box;
     width: 7%;
+    margin-top: 18vh;
     position: fixed;
     background: #ecf1c4;
     border-radius: 5px;
@@ -21,7 +22,7 @@
     position: fixed;
     background: azure;
     border-radius: 5px;
-    height: 33.33vh;
+    height: 45vh;
     width: 23%;
     overflow: auto;
     min-width: 13%;
@@ -30,7 +31,7 @@
     border: 2px solid black;
 }
 #options_home{
-    margin-top: 34.5vh;
+    margin-top: 47vh;
     padding: 4px;
     position: fixed;
     width: 23%;
@@ -44,22 +45,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
-}
-#person{
-    background: #f6a7a7;
-}
-.person{
-    background: #f6a7a7;
-}
-#event{
-    background: #ecab82;
-}
-#dialog{
-    background: #c2c37b;
-}
-#attribute{
-    background: #90d189;
 }
 .node_div{
     position: absolute;
@@ -77,7 +62,6 @@
     padding: 5px;
     border: black;
     border-radius: 5px;
-    background: gray;
 }
 .node_name{
     font-size: large;
@@ -85,4 +69,22 @@
 }
 .node_description{
     font-size: small;
+}
+.person{
+    background: #f6a7a7;
+}
+#event{
+    background: #ecab82;
+}
+.dialog{
+    background: #c2c37b;
+}
+#attribute{
+    background: #90d189;
+}
+.save_bt{
+    background: #98e2ec;
+}
+.load_bt{
+    background: #78a8ed;
 }

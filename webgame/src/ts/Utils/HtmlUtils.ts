@@ -1,6 +1,7 @@
 import {game_node_map} from '../../index'
-import {Refresh} from '../Nodes/GameNode'
+import {DialogNode, Refresh} from '../Nodes/GameNode'
 import {openEditModal} from "./ModalDiv";
+import {GameNode} from "../Nodes/GameNodeItf";
 export function CreateElement(tag:string, innerText:string, father:HTMLElement) {
     var element = document.createElement(tag)
     element.innerText = innerText
@@ -19,8 +20,6 @@ export function CreateElementWithIdAndClasses(tag:string, id:string,innerText:st
     element.id=id
     return element
 }
-
-
 export function CreateElementWithid(tag:string, id:string, innerText:string, father:HTMLElement) {
     let element = CreateElement(tag, innerText, father)
     element.id = id
@@ -50,10 +49,8 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
     if (type == "show") {
 
     } else if(type == "dialog") {
-        console.log("sadasdasdfdfdsf")
         CreateDialogInput(id, name, fatherId)
     } else {
-        console.log(type + "@@@@@")
         const div = CreateElementWithClasses("form", "", fatherId, ["input-group", "mb-3"]);
         const before = CreateElementWithClasses("div", "", div, ["input-group-prepend"])
         switch (type) {
@@ -63,9 +60,6 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
             case "number":
                 CreateNumberInput(id, name,game_node_map.get(id)[name], div)
                 break;
-            // case "enums":
-            //     CreateSelectInput(id, name, name, div)
-            //     break;
             case "texts":
                 CreateTextsInput(id, name, game_node_map.get(id)[name], div)
                 break;
@@ -104,4 +98,50 @@ export function CreateSelectInput(name:string, options: string[], fatherId:HTMLE
     select.classList.add("input_content")
     div.appendChild(select)
     CreateElementWithClasses("button","ok",div,["ok_button"]);
+}
+
+export function setRightPosition(lastNodeId:string, thisNodeId:string) {
+    var $lastElement = $('#'+ lastNodeId)!;
+    var positionTop = $lastElement!.offset()!.top;
+    var positionLeft = $lastElement!.offset()!.left;
+    var height = $lastElement.outerHeight();
+    var width = $lastElement.outerWidth()!;
+    var $element = $('#'+ thisNodeId);
+    $element.offset({ top: positionTop });
+    $element.offset({ left: positionLeft + width + 10 });
+}
+
+export function setBottomPosition(lastNodeId:string, thisNodeId:string) {
+    var $lastElement = $('#'+ lastNodeId);
+    var positionTop = $lastElement!.offset()!.top;
+    var positionLeft = $lastElement!.offset()!.left;
+    var height = $lastElement.outerHeight()!;
+    var width = $lastElement.outerWidth()!;
+    var $element = $('#'+ thisNodeId);
+    $element.offset({ top: positionTop + height + 30 });
+    if ($element!.outerWidth()! > width) {
+        $element.offset({ left: positionLeft - Math.abs(($element!.outerWidth()! - width)) / 2 });
+    } else {
+        $element.offset({ left: positionLeft + Math.abs(($element!.outerWidth()! - width)) / 2 });
+    }
+
+    if ($element!.offset()!.top + $element!.outerHeight()! > window.innerHeight) {
+        document.body.style.height = (document.body.offsetHeight * 1.5) + "px";
+    }
+}
+
+/*
+设置组件的位置
+ */
+export function SetCompPosition(node:GameNode, lastNode:string, type:string) {
+    if(type == "Begin") {
+        setBottomPosition(lastNode, node.id)
+    } else {
+        if (lastNode === "Begin") {
+        } else if(node.getParentNodeIds()!.indexOf(lastNode) != -1) {
+            setBottomPosition(node!.getParentNodeIds()![0], node.id)
+        } else {
+            setRightPosition(lastNode, node.id)
+        }
+    }
 }

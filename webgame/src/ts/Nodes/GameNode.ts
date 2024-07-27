@@ -9,14 +9,13 @@ import {
 import {game_node_map} from "../../index";
 import {GameNode} from "./GameNodeItf";
 
-
 export class BaseNode implements GameNode{
     desc: string = "";
     id: string = "";
     params: Map<any, string> = new Map();
     type: string = "Base";
-    children: GameNode[] = new  Array<GameNode>();
-    parentNode: GameNode | undefined = undefined;
+    childrenNodeIds: string[] = new Array();
+    parentNodeIds: string[] = new Array();
 
     getDesc(): string {
         return this.desc;
@@ -30,12 +29,12 @@ export class BaseNode implements GameNode{
         return this.type;
     }
 
-    getParentNode(): GameNode|undefined {
-        return this.parentNode;
+    getParentNodeIds(): string[]|undefined {
+        return this.parentNodeIds;
     }
 
-    getChildren(): GameNode[]|undefined {
-        return this.children;
+    getChildrenNodeIds(): string[]|undefined {
+        return this.childrenNodeIds;
     }
 
     getParams(): Map<any, string> {
@@ -112,8 +111,8 @@ const node_desc="_node_desc"
 export function Refresh(id:string){
     let id_node_name = document.getElementById(id+node_name)!
     let id_node_desc = document.getElementById(id+node_desc)!
-    id_node_name.innerText = game_node_map.get(id).getType()
-    id_node_desc.innerText = game_node_map.get(id).getDesc()
+    id_node_name.innerText = game_node_map.get(id)!.getType()
+    id_node_desc.innerText = game_node_map.get(id)!.getDesc()
 }
 
 export function SetOptions(node:any, father:HTMLElement) {
@@ -141,6 +140,9 @@ export function CreateNodeAndView(node:GameNode, father:HTMLElement) {
             break;
         case "person":
             nodeId.classList.add("person")
+            break;
+        case "dialog":
+            nodeId.classList.add("dialog")
             break;
         default:
             break;
