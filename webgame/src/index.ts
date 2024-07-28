@@ -7,12 +7,14 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { v4 as uuidv4 } from 'uuid';
 import {CreateElementWithid, CreateElementWithClasses, CreateElement, SetCompPosition} from "./ts/Utils/HtmlUtils";
-import {BeginNode, CreateNodeAndView, DialogNode, PersonNode, SetOptions} from "./ts/Nodes/GameNode";
+import {BaseNode, BeginNode, CreateNodeAndView, DialogNode, PersonNode, SetOptions} from "./ts/Nodes/GameNode";
 import {jsPlumb} from "jsplumb";
 import {ClearJsplumb, InitJsPlumb, SetConnectionJsplumb, SetJsplumb} from "./ts/Utils/JsplumbUtils";
-import {GameNode} from "./ts/Nodes/GameNodeItf";
+//import {GameNode} from "./ts/Nodes/GameNodeItf";
 import {addRow, openEditModal, saveData} from "./ts/Utils/ModalDiv";
+import {GameNode} from "./ts/Nodes/GameNodeItf";
 let settings = ["person","event","dialog","attribute"]
+import { stringify, parse } from 'flatted';
 
 export let game_node_map = new Map<string, any>();
 export let game_node_map_loaded = new Map<string, any>();
@@ -43,9 +45,13 @@ function InitBeginNode() {
 
 function SaveFile(){
     let jsons = "["
-    game_node_map.forEach((value, key) => {
-        jsons += JSON.stringify(value) + ","
-    });
+    console.log(game_node_map)
+    // game_node_map.forEach((value, key) => {
+    //     jsons += stringify(value) + ","
+    //     console.log(jsons)
+    // });
+    console.log("@@@@@@@@")
+    console.log(stringify(game_node_map))
     const replaced = jsons.replace(/.$/, ']');
     // 创建一个a标签
     const link = document.createElement('a');
@@ -120,6 +126,7 @@ function LoadClearAll(){
     game_node_map.forEach((value, key) => {
         ClearJsplumb(jsPlumbInstance, key)
     })
+    game_node_map.clear()
 }
 
 
@@ -130,6 +137,7 @@ function breadthFirstTraversal(root: GameNode) {
     let addedchile:string[] = []
     while (queue.length > 0) {
         const nodeOne:GameNode = queue.shift() as GameNode;
+        console.log(nodeOne.id)
         AddNewNodeDiv(nodeOne, 0,0)
         SetCompPosition(nodeOne, lastNode , "load")
         SetJsplumb(jsPlumbInstance, nodeOne.id)
@@ -162,13 +170,32 @@ function LoadFromFile() {
         reader.onload = () => {
             let str = reader.result
             if (typeof str === "string") {
-                let nodes: GameNode[] = JSON.parse(str)
+                let nodes: any[] = parse(str)
+                console.log(nodes)
                 if (nodes.length >= 0) {
                     LoadClearAll()
                     for (const nodesKey in nodes) {
-                        let nodeOne: GameNode = nodes[nodesKey] as GameNode
+                        let nodeOne :any;
+                        switch(nodes[nodesKey].type){
+                            case "begin":
+                                nodes[nodesKey].__proto__ = BeginNode.prototype
+                                nodeOne = nodes[nodesKey] as BaseNode
+                                break;
+                            case "person":
+                                nodes[nodesKey].__proto__ = PersonNode.prototype
+                                nodeOne = nodes[nodesKey] as PersonNode
+                                break;
+                            case "dialog":
+                                nodes[nodesKey].__proto__ = DialogNode.prototype
+                                nodeOne = nodes[nodesKey] as DialogNode
+                                break;
+                            default:
+                                alert("wrong type" + nodes[nodesKey].type)
+                                break;
+                        }
                         game_node_map_loaded.set(nodeOne.id, nodeOne)
                     }
+                    console.log(game_node_map_loaded)
                     let rootNode:GameNode = game_node_map_loaded.get("Begin")!
                     breadthFirstTraversal(rootNode)
                 }

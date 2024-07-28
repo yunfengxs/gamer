@@ -6,7 +6,7 @@ import {
     CreateTextInput,
     CreateTextsInput
 } from "../Utils/HtmlUtils";
-import {game_node_map} from "../../index";
+import {game_node_map, game_node_map_loaded} from "../../index";
 import {GameNode} from "./GameNodeItf";
 
 export class BaseNode implements GameNode{
@@ -45,11 +45,15 @@ export class BaseNode implements GameNode{
         this.id = id;
         this.desc = desc;
         this.params.set("desc","string")
-
     }
 }
 
 export class BeginNode extends BaseNode{
+    constructor(id: string, desc: string) {
+        super(id, desc);
+        console.log("sdad")
+        this.params.set("type","show")
+    }
     type: string = "begin";
     getType(): string {
         return this.type;
@@ -119,6 +123,8 @@ export function SetOptions(node:any, father:HTMLElement) {
     father.innerHTML=""
     const nodeId = CreateElementWithid("div", node.id+"_option", node.id, father)
     nodeId.classList.add("continer")
+    console.log(node.params)
+    console.log(game_node_map_loaded)
     node.params.forEach((value:string, key:string) => {
         CreateInput(node.id, key, value, father)
     })
@@ -128,8 +134,9 @@ export function CreateNodeAndView(node:GameNode, father:HTMLElement) {
     let nodeId = CreateElementWithid("div", node.id, "", father)
     nodeId.classList.add("node_div")
     let nodeId_div =  CreateElement("div", "", nodeId)
-    CreateElementWithIdAndClasses("div",node.getId()+"_node_name", node.getType(), nodeId_div,["node_name"])
-    CreateElementWithIdAndClasses("div",node.getId()+"_node_desc", node.getDesc(), nodeId_div, ["node_description"])
+    let name = node.getId()
+    CreateElementWithIdAndClasses("div",name+"_node_name", node.getType(), nodeId_div,["node_name"])
+    CreateElementWithIdAndClasses("div",name+"_node_desc", node.getDesc(), nodeId_div, ["node_description"])
     nodeId.addEventListener("click", function (event){
         SetOptions(game_node_map.get(nodeId.id), document.getElementById("options_home")!)
         //document.getElementById(node.getId()+"_desc")!.innerText = game_node_map.get(nodeId.id).getDesc()
