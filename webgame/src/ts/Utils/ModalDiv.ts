@@ -12,7 +12,7 @@ export function openEditModal(id:string) {
     container.innerHTML = '';
     let dialogs:GameDialog[] = (game_node_map.get(id) as DialogNode).dialogs
     dialogs.forEach(rowData => {
-        addRow('modalRowsContainer', { inputValue: rowData.speaker, textareaValue: rowData.conversation.join('\n')});
+        addRow('modalRowsContainer', { inputValue: rowData.spker, textareaValue: rowData.convs.join('\n')});
     });
     updateSerialNumbers('modalRowsContainer');
     const editModalElement = document.getElementById('editModal');
@@ -95,8 +95,8 @@ function UpdateDialogContext(id:string) {
     contextShower.innerHTML = ""
     for (const dialogOne of (game_node_map.get(id) as DialogNode).getDialog()){
         let oneline = CreateElementWithClasses("div","", contextShower,["row"])!
-        CreateElementWithClasses("text",dialogOne.speaker, oneline,["col-2"])
-        CreateElementWithClasses("pre",dialogOne.conversation.join('\n'),oneline,["option_show", "col-10"])
+        CreateElementWithClasses("text",dialogOne.spker, oneline,["col-2"])
+        CreateElementWithClasses("pre",dialogOne.convs.join('\n'), oneline,["option_show", "col-10"])
     }
 }
 function exportData(id:string) {

@@ -110,7 +110,6 @@ export function SetConnectionJsplumb(jsplumbInstance:any, recs:string, tar:strin
     /* global jsPlumb */
     // @ts-ignore
     jsPlumb.ready(function(){
-        console.log("btm"+recs+"   "+ "top"+tar)
         jsplumbInstance.connect({ uuids: ["btm"+recs, "top"+tar] })
     });
 }

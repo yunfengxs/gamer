@@ -1,3 +1,4 @@
+import $ from 'jquery'
 import {game_node_map} from '../../index'
 import {DialogNode, Refresh} from '../Nodes/GameNode'
 import {openEditModal} from "./ModalDiv";
@@ -64,7 +65,7 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
                 CreateTextsInput(id, name, game_node_map.get(id)[name], div)
                 break;
             default:
-                ;
+                break;
         }
         const after = CreateElementWithClasses("div", "", div, ["input-group-append"])
         CreateElementWithClasses("span", name, before, ["input-group-text"]);
@@ -100,48 +101,35 @@ export function CreateSelectInput(name:string, options: string[], fatherId:HTMLE
     CreateElementWithClasses("button","ok",div,["ok_button"]);
 }
 
-export function setRightPosition(lastNodeId:string, thisNodeId:string) {
-    var $lastElement = $('#'+ lastNodeId)!;
-    var positionTop = $lastElement!.offset()!.top;
-    var positionLeft = $lastElement!.offset()!.left;
-    var height = $lastElement.outerHeight();
-    var width = $lastElement.outerWidth()!;
-    var $element = $('#'+ thisNodeId);
-    $element.offset({ top: positionTop });
-    $element.offset({ left: positionLeft + width + 10 });
+export function GetRightPosition(lastNodeId:string) {
+    let $lastElement = $("#"+lastNodeId)!;
+    let positionTop = $lastElement!.offset()!.top;
+    let positionLeft = $lastElement!.offset()!.left;
+    let width = $lastElement.outerWidth()!;
+    return [positionLeft + width + 10, positionTop]
 }
 
-export function setBottomPosition(lastNodeId:string, thisNodeId:string) {
-    var $lastElement = $('#'+ lastNodeId);
-    var positionTop = $lastElement!.offset()!.top;
-    var positionLeft = $lastElement!.offset()!.left;
-    var height = $lastElement.outerHeight()!;
-    var width = $lastElement.outerWidth()!;
-    var $element = $('#'+ thisNodeId);
-    $element.offset({ top: positionTop + height + 30 });
-    if ($element!.outerWidth()! > width) {
-        $element.offset({ left: positionLeft - Math.abs(($element!.outerWidth()! - width)) / 2 });
-    } else {
-        $element.offset({ left: positionLeft + Math.abs(($element!.outerWidth()! - width)) / 2 });
-    }
-
-    if ($element!.offset()!.top + $element!.outerHeight()! > window.innerHeight) {
+export function GetBottomPosition(lastNodeId:string, size:number) {
+    let $lastElement = $("#"+lastNodeId);
+    let positionTop = $lastElement!.offset()!.top;
+    let positionLeft = $lastElement!.offset()!.left;
+    let height = $lastElement.outerHeight()!;
+    let width = $lastElement.outerWidth()!;
+    let top = positionTop + height + 30;
+    if (top + height > window.innerHeight - 60) {
         document.body.style.height = (document.body.offsetHeight * 1.5) + "px";
     }
+    return [positionLeft - width * size, top]
 }
 
 /*
 设置组件的位置
  */
-export function SetCompPosition(node:GameNode, lastNode:string, type:string) {
-    if(type == "Begin") {
-        setBottomPosition(lastNode, node.id)
+export function GetCompPosition(node:GameNode, lastNode:string) {
+    if (node.getParentNodeIds()!.indexOf(lastNode) != -1) {
+        const firstPar = node!.getParentNodeIds()![0]
+        return GetBottomPosition(firstPar, game_node_map.get(firstPar).getChildrenNodeIds()!.length - 1)
     } else {
-        if (lastNode === "Begin") {
-        } else if(node.getParentNodeIds()!.indexOf(lastNode) != -1) {
-            setBottomPosition(node!.getParentNodeIds()![0], node.id)
-        } else {
-            setRightPosition(lastNode, node.id)
-        }
+        return GetRightPosition(lastNode)
     }
 }

@@ -40,8 +40,6 @@
 }
 #Begin{
     background: #90ffb4;
-    min-width: 100px;
-    min-height: 62px;
     display: flex;
     justify-content: center;
     align-items: center;

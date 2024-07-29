@@ -9,13 +9,17 @@ import {
 import {game_node_map, game_node_map_loaded} from "../../index";
 import {GameNode} from "./GameNodeItf";
 
+
+const node_name="_node_name"
+const node_desc="_node_desc"
+
 export class BaseNode implements GameNode{
     desc: string = "";
     id: string = "";
-    params: Map<any, string> = new Map();
+    params: string[][] = [];
     type: string = "Base";
-    childrenNodeIds: string[] = new Array();
-    parentNodeIds: string[] = new Array();
+    chdNoIds: string[] = [];
+    parNoIds: string[] = [];
 
     getDesc(): string {
         return this.desc;
@@ -30,29 +34,28 @@ export class BaseNode implements GameNode{
     }
 
     getParentNodeIds(): string[]|undefined {
-        return this.parentNodeIds;
+        return this.parNoIds;
     }
 
     getChildrenNodeIds(): string[]|undefined {
-        return this.childrenNodeIds;
+        return this.chdNoIds;
     }
 
-    getParams(): Map<any, string> {
+    getParams(): string[][] {
         return this.params;
     }
 
     constructor(id:string, desc:string) {
         this.id = id;
         this.desc = desc;
-        this.params.set("desc","string")
+        this.params.push(["desc","string"]);
     }
 }
 
 export class BeginNode extends BaseNode{
     constructor(id: string, desc: string) {
         super(id, desc);
-        console.log("sdad")
-        this.params.set("type","show")
+        this.params.push(["type","show"])
     }
     type: string = "begin";
     getType(): string {
@@ -76,19 +79,19 @@ export class PersonNode extends BaseNode{
         this.name = name;
         this.age = age;
         this.gender = gender;
-        this.params.set("type","show")
-        this.params.set("name","string")
-        this.params.set("age","number")
-        this.params.set("sexes","enums")
+        this.params.push(["type","show"])
+        this.params.push(["name","string"])
+        this.params.push(["age","number"])
+        this.params.push(["sexes","enums"])
     }
 }
 export class GameDialog{
-    constructor(speaker: string, conversation: string[]) {
-        this.speaker = speaker;
-        this.conversation = conversation;
+    constructor(spker: string, convs: string[]) {
+        this.spker = spker;
+        this.convs = convs;
     }
-    speaker:string = ""
-    conversation:string[] = new Array
+    spker:string = ""
+    convs:string[] = new Array
 }
 export class DialogNode extends BaseNode{
     dialogs: GameDialog[] = Array();
@@ -105,12 +108,24 @@ export class DialogNode extends BaseNode{
     }
     constructor(id:string, desc:string, dialogs?:string[]) {
         super(id,desc)
-        this.params.set("type","show")
-        this.params.set("dialogs","dialog")
+        this.params.push(["type","show"])
+        this.params.push(["dialogs","dialog"])
     }
 }
-const node_name="_node_name"
-const node_desc="_node_desc"
+export class PackageNode extends BaseNode{
+    type:string = "package"
+
+    getType(): string {
+        return this.type;
+    }
+    constructor(id:string, desc:string, dialogs?:string[]) {
+        super(id,desc)
+        this.params.push(["type","show"])
+        this.params.push(["dialogs","dialog"])
+    }
+}
+
+
 
 export function Refresh(id:string){
     let id_node_name = document.getElementById(id+node_name)!
@@ -123,11 +138,9 @@ export function SetOptions(node:any, father:HTMLElement) {
     father.innerHTML=""
     const nodeId = CreateElementWithid("div", node.id+"_option", node.id, father)
     nodeId.classList.add("continer")
-    console.log(node.params)
-    console.log(game_node_map_loaded)
-    node.params.forEach((value:string, key:string) => {
-        CreateInput(node.id, key, value, father)
-    })
+    for (const paramsStr of node.params) {
+        CreateInput(node.id, paramsStr[0], paramsStr[1], father)
+    }
 }
 
 export function CreateNodeAndView(node:GameNode, father:HTMLElement) {
@@ -139,7 +152,6 @@ export function CreateNodeAndView(node:GameNode, father:HTMLElement) {
     CreateElementWithIdAndClasses("div",name+"_node_desc", node.getDesc(), nodeId_div, ["node_description"])
     nodeId.addEventListener("click", function (event){
         SetOptions(game_node_map.get(nodeId.id), document.getElementById("options_home")!)
-        //document.getElementById(node.getId()+"_desc")!.innerText = game_node_map.get(nodeId.id).getDesc()
     });
     switch (node.getType()) {
         case "begin":
