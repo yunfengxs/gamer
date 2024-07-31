@@ -4,10 +4,11 @@ import {
     CreateNumberInput,
     CreateSelectInput,
     CreateTextInput,
-    CreateTextsInput
+    CreateTextsInput, UpdateOptionShower
 } from "../Utils/HtmlUtils";
 import {game_node_map, game_node_map_loaded} from "../../index";
 import {GameNode} from "./GameNodeItf";
+import {Item} from "./Items";
 
 
 const node_name="_node_name"
@@ -109,23 +110,21 @@ export class DialogNode extends BaseNode{
     constructor(id:string, desc:string, dialogs?:string[]) {
         super(id,desc)
         this.params.push(["type","show"])
-        this.params.push(["dialogs","dialog"])
+        this.params.push(["dialogs","modal"])
     }
 }
 export class PackageNode extends BaseNode{
     type:string = "package"
-
+    target:Item[] = new Array()
     getType(): string {
         return this.type;
     }
-    constructor(id:string, desc:string, dialogs?:string[]) {
+    constructor(id:string, desc:string) {
         super(id,desc)
         this.params.push(["type","show"])
-        this.params.push(["dialogs","dialog"])
+        this.params.push(["修改包裹","modal"])
     }
 }
-
-
 
 export function Refresh(id:string){
     let id_node_name = document.getElementById(id+node_name)!
@@ -152,19 +151,23 @@ export function CreateNodeAndView(node:GameNode, father:HTMLElement) {
     CreateElementWithIdAndClasses("div",name+"_node_desc", node.getDesc(), nodeId_div, ["node_description"])
     nodeId.addEventListener("click", function (event){
         SetOptions(game_node_map.get(nodeId.id), document.getElementById("options_home")!)
+        UpdateOptionShower(nodeId.id)
     });
-    switch (node.getType()) {
-        case "begin":
-            nodeId.classList.add("begin")
-            break;
-        case "person":
-            nodeId.classList.add("person")
-            break;
-        case "dialog":
-            nodeId.classList.add("dialog")
-            break;
-        default:
-            break;
-    }
+    nodeId.classList.add(node.getType())
     return nodeId
 }
+    // switch (node.getType()) {
+    //     case "begin":
+    //         nodeId.classList.add("begin")
+    //         break;
+    //     case "person":
+    //         nodeId.classList.add("person")
+    //         break;
+    //     case "dialog":
+    //         nodeId.classList.add("dialog")
+    //         break;
+    //     case "package":
+    //         nodeId.classList.add()
+    //     default:
+    //         break;
+    // }

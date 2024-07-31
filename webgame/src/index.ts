@@ -12,13 +12,21 @@ import {
     CreateElement,
     GetCompPosition
 } from "./ts/Utils/HtmlUtils";
-import {BaseNode, BeginNode, CreateNodeAndView, DialogNode, PersonNode, SetOptions} from "./ts/Nodes/GameNode";
+import {
+    BaseNode,
+    BeginNode,
+    CreateNodeAndView,
+    DialogNode,
+    PackageNode,
+    PersonNode,
+    SetOptions
+} from "./ts/Nodes/GameNode";
 import {jsPlumb} from "jsplumb";
 import {ClearJsplumb, InitJsPlumb, SetConnectionJsplumb, SetJsplumb} from "./ts/Utils/JsplumbUtils";
 //import {GameNode} from "./ts/Nodes/GameNodeItf";
-import {addRow, openEditModal, saveData} from "./ts/Utils/ModalDiv";
+import {addRow, saveData} from "./ts/Utils/DialogModel";
 import {GameNode} from "./ts/Nodes/GameNodeItf";
-let settings = ["person","event","dialog","attribute"]
+let settings = ["person","event","dialog","attribute","package"]
 
 export let game_node_map = new Map<string, any>();
 export let game_node_map_loaded = new Map<string, any>();
@@ -88,7 +96,7 @@ function InitSettings(){
             let yPos = ui.offset.top
             switch(name){
                 case "person":
-                    let person = new PersonNode(uuid,"this is test node", "刘晓明",12,"直升飞机")
+                    let person = new PersonNode(uuid,"this is test node", " ", 0,"")
                     AddNewNodeDiv(person, xPos, yPos)
                     break;
                 case "event":
@@ -96,6 +104,10 @@ function InitSettings(){
                 case "dialog":
                     let dialog = new DialogNode(uuid,"this is dialog", )
                     AddNewNodeDiv(dialog, xPos, yPos)
+                    break;
+                case "package":
+                    let packageNode = new PackageNode(uuid,"this is package change")
+                    AddNewNodeDiv(packageNode, xPos, yPos)
                     break;
                 default:
                     break;
@@ -109,8 +121,8 @@ function InitNodesView() {
 }
 
 function InitModals() {
-    document.getElementById('addRowBtn')?.addEventListener('click', () => addRow('modalRowsContainer'));
-    document.getElementById('saveBtn')?.addEventListener('click', saveData);
+    document.getElementById('DialogAddRowBtn')?.addEventListener('click', () => addRow('DialogModalRowsContainer'));
+    document.getElementById('DialogModalSaveBtn')?.addEventListener('click', saveData);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

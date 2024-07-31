@@ -1,8 +1,9 @@
 import $ from 'jquery'
 import {game_node_map} from '../../index'
 import {DialogNode, Refresh} from '../Nodes/GameNode'
-import {openEditModal} from "./ModalDiv";
+import {DialogModalRun, UpdateDialogContext} from "./DialogModel";
 import {GameNode} from "../Nodes/GameNodeItf";
+import {PackageModalRun, UpdatePackageContext} from "./PackageModal";
 export function CreateElement(tag:string, innerText:string, father:HTMLElement) {
     var element = document.createElement(tag)
     element.innerText = innerText
@@ -43,14 +44,21 @@ export function CreateNumberInput(id:string, name:string,value:number, fatherId:
     input_button.value=String(value)
     input_button.id = id+"_"+name+"_input"
 }
-export function CreateDialogInput(id:string, name:string, fatherId:HTMLElement) {
-    CreateElementWithClasses("button","编辑",fatherId,["form-control"]).addEventListener("click", () => openEditModal(id))
+// export function CreateDialogInput(id:string, name:string, fatherId:HTMLElement) {
+//     CreateElementWithClasses("button",name,fatherId,["form-control"]).addEventListener("click", () => DialogModalRun(id))
+// }
+function CreateModal(id:string, name:string, fatherId:HTMLElement, func:any) {
+    CreateElementWithClasses("button", name, fatherId,["form-control"]).addEventListener("click", () => func(id))
 }
+const ModalFuncMap = new Map([
+    ["dialogModal", DialogModalRun],
+    ["packageModal", PackageModalRun]
+    ])
 export function CreateInput(id:string, name:string, type:string, fatherId:HTMLElement) {
     if (type == "show") {
 
-    } else if(type == "dialog") {
-        CreateDialogInput(id, name, fatherId)
+    } else if(type == "dialogaa") {
+        //CreateDialogInput(id, name, fatherId)
     } else {
         const div = CreateElementWithClasses("form", "", fatherId, ["input-group", "mb-3"]);
         const before = CreateElementWithClasses("div", "", div, ["input-group-prepend"])
@@ -64,6 +72,8 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
             case "texts":
                 CreateTextsInput(id, name, game_node_map.get(id)[name], div)
                 break;
+            case "modal":
+                CreateModal(id, name, fatherId, ModalFuncMap.get(game_node_map.get(id)["type"]+"Modal"))
             default:
                 break;
         }
@@ -83,7 +93,19 @@ export function CreateInput(id:string, name:string, type:string, fatherId:HTMLEl
         CreateElement("br", "", div);
     }
 }
+function UpdatePersonContext(id:string) {
+    return id
+}
 
+export function UpdateOptionShower(id:string) {
+    let contextShower = document.getElementById('options_shower') as HTMLElement;
+    let UpdateMap = new Map([
+        ["dialog",UpdateDialogContext],
+        ["package",UpdatePackageContext],
+        ["person",UpdatePersonContext]
+    ])
+    UpdateMap.get(game_node_map.get(id)["type"])!(id)
+}
 export function CreateSelectInput(name:string, options: string[], fatherId:HTMLElement) {
     const div = CreateElementWithClasses("div", ""  ,fatherId,["input_row"]);
     CreateElementWithClasses("text", name ,div, ["name_text"]);

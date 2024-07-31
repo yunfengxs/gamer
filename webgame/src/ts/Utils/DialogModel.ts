@@ -7,26 +7,26 @@ import '../../css/modal_dialog.css'
 
 let contextShower = document.getElementById('options_shower') as HTMLElement;
 
-export function openEditModal(id:string) {
-    const container = document.getElementById('modalRowsContainer') as HTMLElement;
+export function DialogModalRun(id:string) {
+    const container = document.getElementById('DialogModalRowsContainer') as HTMLElement;
     container.innerHTML = '';
     let dialogs:GameDialog[] = (game_node_map.get(id) as DialogNode).dialogs
     dialogs.forEach(rowData => {
-        addRow('modalRowsContainer', { inputValue: rowData.spker, textareaValue: rowData.convs.join('\n')});
+        addRow('DialogModalRowsContainer', { inputValue: rowData.spker, textareaValue: rowData.convs.join('\n')});
     });
-    updateSerialNumbers('modalRowsContainer');
-    const editModalElement = document.getElementById('editModal');
-    if (editModalElement) {
-        editModalElement.title = id
-        const editModal = new Modal(editModalElement);
-        editModal.show();
+    updateSerialNumbers('DialogModalRowsContainer');
+    const DialogModalElement = document.getElementById('DialogModal');
+    if (DialogModalElement) {
+        DialogModalElement.title = id
+        const DialogModal = new Modal(DialogModalElement);
+        DialogModal.show();
     }
 }
 
 export function saveData() {
-    const editModalElement = document.getElementById('editModal')!;
-    let title = editModalElement.title;
-    const modalRows = document.querySelectorAll('#modalRowsContainer .row-item');
+    const DialogModalElement = document.getElementById('DialogModal')!;
+    let title = DialogModalElement.title;
+    const modalRows = document.querySelectorAll('#DialogModalRowsContainer .row-item');
     let hasEmptyFields = false;
 
     modalRows.forEach(row => {
@@ -51,9 +51,9 @@ export function saveData() {
     });
     updateSerialNumbers('rowsContainer');
     exportData(title);
-    if (editModalElement) {
-        const editModal = Modal.getInstance(editModalElement);
-        editModal?.hide();
+    if (DialogModalElement) {
+        const DialogModal = Modal.getInstance(DialogModalElement);
+        DialogModal?.hide();
     }
 }
 export function addRow(containerId: string, data = { inputValue: '', textareaValue: '' }) {
@@ -91,7 +91,7 @@ function updateSerialNumbers(containerId: string) {
         (row as HTMLDivElement).dataset.index = (index + 1).toString();
     });
 }
-function UpdateDialogContext(id:string) {
+export function UpdateDialogContext(id:string) {
     contextShower.innerHTML = ""
     for (const dialogOne of (game_node_map.get(id) as DialogNode).getDialog()){
         let oneline = CreateElementWithClasses("div","", contextShower,["row"])!
