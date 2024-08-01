@@ -22,7 +22,7 @@ import {
     SetOptions
 } from "./ts/Nodes/GameNode";
 import {jsPlumb} from "jsplumb";
-import {ClearJsplumb, InitJsPlumb, SetConnectionJsplumb, SetJsplumb} from "./ts/Utils/JsplumbUtils";
+import {ClearJsplumb, DeleteJsplumbNode, InitJsPlumb, SetConnectionJsplumb, SetJsplumb} from "./ts/Utils/JsplumbUtils";
 //import {GameNode} from "./ts/Nodes/GameNodeItf";
 import {addRow, saveData} from "./ts/Utils/DialogModel";
 import {GameNode} from "./ts/Nodes/GameNodeItf";
@@ -53,7 +53,9 @@ function InitBeginNode() {
         nodes_shower.offsetWidth / 1.7,
         60)
 }
-
+export function DeleteNode(id:string) {
+    DeleteJsplumbNode(jsPlumbInstance, id)
+}
 function SaveFile(){
     let jsons = "["
     game_node_map.forEach((value, key) => {
@@ -96,13 +98,13 @@ function InitSettings(){
             let yPos = ui.offset.top
             switch(name){
                 case "person":
-                    let person = new PersonNode(uuid,"this is test node", " ", 0,"")
+                    let person = new PersonNode(uuid,"this is test node", [])
                     AddNewNodeDiv(person, xPos, yPos)
                     break;
                 case "event":
                     break;
                 case "dialog":
-                    let dialog = new DialogNode(uuid,"this is dialog", )
+                    let dialog = new DialogNode(uuid,"this is dialog")
                     AddNewNodeDiv(dialog, xPos, yPos)
                     break;
                 case "package":
@@ -207,6 +209,10 @@ function LoadFromFile() {
                             case "dialog":
                                 nodes[nodesKey].__proto__ = DialogNode.prototype
                                 nodeOne = nodes[nodesKey] as DialogNode
+                                break;
+                            case "package":
+                                nodes[nodesKey].__proto__ = PackageNode.prototype
+                                nodeOne = nodes[nodesKey] as PackageNode
                                 break;
                             default:
                                 alert("wrong type" + nodes[nodesKey].type)

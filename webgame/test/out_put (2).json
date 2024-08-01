@@ -1,1 +1,124 @@
-[{"desc":"Game Begin","id":"Begin","params":[["desc","string"],["type","show"]],"type":"begin","chdNoIds":["69ecbc5b-8bed-4f54-b97a-4b79942c3694","7c6a326d-9ad4-4b21-b651-0548b2e99973"],"parNoIds":[]},{"desc":"add 村长","id":"69ecbc5b-8bed-4f54-b97a-4b79942c3694","params":[["desc","string"],["type","show"],["name","string"],["age","number"],["sexes","enums"]],"type":"person","chdNoIds":["07fd0d3f-9711-47f3-a25b-a378ad4376b9"],"parNoIds":["Begin","7c6a326d-9ad4-4b21-b651-0548b2e99973"],"name":"刘晓明","age":12,"gender":"直升飞机"},{"desc":"??? to 村长","id":"07fd0d3f-9711-47f3-a25b-a378ad4376b9","params":[["desc","string"],["type","show"],["dialogs","dialog"]],"type":"dialog","chdNoIds":["0f348575-877e-4f9a-9794-f18b75146f0d","7540d08b-5305-4fa8-9119-4c3e2242781c"],"parNoIds":["69ecbc5b-8bed-4f54-b97a-4b79942c3694"],"dialogs":[{"spker":"村长","convs":["年轻人，年轻人......"]},{"spker":"???","convs":["我?"]},{"spker":"村长","convs":["对，说的就是你，别跑得那么快嘛"]},{"spker":"???","convs":["有什么事情？您说"]},{"spker":"村长","convs":["你叫啥来着？我这年纪大了，记不大清了。","但我知道你是我们村里的小伙子，还和对面山上土地庙里的云先生能玩到一起。"]},{"spker":"村长","convs":["你且听我说，这云先生可是个了不得的人啊！村里人都说他武艺高强。而眼下村子里遇到一件难事，要是能请动他出手，一定能帮大家解决问题。"]},{"spker":"???","convs":["老村长，我也是咋村里有名的少侠，有什么难处，你且说与我听，要是我能解决，不就不用麻烦人家云先生了嘛？"]},{"spker":"村长","convs":["告诉你也没关系，村子背后山上的密林里，最近不知道哪里来了头大野猪，体壮如牛，老是糟蹋我们的庄稼。","刚开始，有人看到它，它还会跑，后来我们组织人手埋伏它，没想到即使被网兜住，它也能咬开网跑掉，我们用刀砍它，也只能砍出小口子。"]},{"spker":"???","convs":["啊？这么厉害！"]},{"spker":"村长","convs":["可不是嘛，我们和它斗了好几天了，它没受到一点伤，我们倒是有三个汉子被他撞折了腿。"]},{"spker":"???","convs":["听着有点可怕啊"]}]},{"desc":"自己上","id":"0f348575-877e-4f9a-9794-f18b75146f0d","params":[["desc","string"],["type","show"],["dialogs","dialog"]],"type":"dialog","chdNoIds":[],"parNoIds":["07fd0d3f-9711-47f3-a25b-a378ad4376b9"],"dialogs":[{"spker":"???","convs":["但是我不会害怕的！"]},{"spker":"???","convs":["不就是头野猪嘛，村长爷爷，你且等着，待我去收拾些家伙事儿，把它捉来！"]},{"spker":"村长","convs":["小伙子，你可别冲动啊！"]}]},{"desc":"去喊人","id":"7540d08b-5305-4fa8-9119-4c3e2242781c","params":[["desc","string"],["type","show"],["dialogs","dialog"]],"type":"dialog","chdNoIds":[],"parNoIds":["07fd0d3f-9711-47f3-a25b-a378ad4376b9"],"dialogs":[{"spker":"???","convs":["看来得请云先生出马了"]},{"spker":"村长","convs":["是啊，你快去看看，帮我请云先生过来。"]},{"spker":"???","convs":["好，我马上去"]},{"spker":"旁白","convs":["你一路小跑跑到了对面山上庙里","推开土地庙偏殿的小门","你发现，这里的床铺已经不见了，桌子上原来摆的笔墨纸砚也不见了"]},{"spker":"旁白","convs":["经过一番仔细检查，你发现房檐下的燕子窝外面，燕子父母盘旋飞着，却不进窝"]},{"spker":"旁白","convs":["你爬了上去，发现，燕子的窝里放了一个小小的包裹","你把它取了出来，打开后，你发现了","一封信","一本小册子","一小块玉片"]}]},{"desc":"this is test node","id":"7c6a326d-9ad4-4b21-b651-0548b2e99973","params":[["desc","string"],["type","show"],["name","string"],["age","number"],["sexes","enums"]],"type":"person","chdNoIds":["69ecbc5b-8bed-4f54-b97a-4b79942c3694"],"parNoIds":["Begin"],"name":"刘晓明","age":12,"gender":"直升飞机"}]
+[{
+  "desc": "Game Begin",
+  "id": "Begin",
+  "type": "begin",
+  "chdNoIds": ["2c87ba6c-a748-4053-a1c8-91de90a40dea"],
+  "parNoIds": []
+}, {
+  "desc": "this is test node",
+  "id": "2c87ba6c-a748-4053-a1c8-91de90a40dea",
+  "type": "person",
+  "chdNoIds": ["bbbace48-11f3-4d5e-a69e-3e5ace37e0ee"],
+  "parNoIds": ["Begin"],
+  "people": [{
+    "name": "老村长",
+    "age": 69,
+    "race": "人族",
+    "gender": "男",
+    "level": 35,
+    "state": "凡人"
+  }]
+}, {
+  "desc": "this is dialog",
+  "id": "bbbace48-11f3-4d5e-a69e-3e5ace37e0ee",
+  "type": "dialog",
+  "chdNoIds": ["8aeadfeb-6b53-4d77-aa6b-f08092ffb168", "d2d58751-7b47-417c-90cb-c86aadfac178"],
+  "parNoIds": ["2c87ba6c-a748-4053-a1c8-91de90a40dea"],
+  "dialogs": [{
+    "spker": "村长",
+    "convs": ["年轻人，年轻人......"]
+  }, {
+    "spker": "???",
+    "convs": ["我?"]
+  }, {
+    "spker": "村长",
+    "convs": ["对，说的就是你，别跑得那么快嘛"]
+  }, {
+    "spker": "???",
+    "convs": ["有什么事情？您说"]
+  }, {
+    "spker": "村长",
+    "convs": ["你叫啥来着？我这年纪大了，记不大清了。", "但我知道你是我们村里的小伙子，还和对面山上土地庙里的云先生能玩到一起。"]
+  }, {
+    "spker": "村长",
+    "convs": ["你且听我说，这云先生可是个了不得的人啊！", "村里人都说他武艺高强。而眼下村子里遇到一件难事，要是能请动他出手，一定能帮大家解决问题。"]
+  }, {
+    "spker": "???",
+    "convs": ["老村长，我也是咋村里有名的少侠，有什么难处，你且说与我听，要是我能解决，不就不用麻烦人家云先生了嘛？"]
+  }, {
+    "spker": "村长",
+    "convs": ["告诉你也没关系，村子背后山上的密林里，最近不知道哪里来了头大野猪，体壮如牛，老是糟蹋我们的庄稼。", "刚开始，有人看到它，它还会跑，后来我们组织人手埋伏它，没想到即使被网兜住，它也能咬开网跑掉，我们用刀砍它，也只能砍出小口子。"]
+  }, {
+    "spker": "???",
+    "convs": ["啊？这么厉害！"]
+  }, {
+    "spker": "村长",
+    "convs": ["可不是嘛，我们和它斗了好几天了，它没受到一点伤，我们倒是有三个汉子被他撞折了腿。"]
+  }, {
+    "spker": "???",
+    "convs": ["听着有点可怕啊"]
+  }]
+}, {
+  "desc": "this is dialog",
+  "id": "8aeadfeb-6b53-4d77-aa6b-f08092ffb168",
+  "type": "dialog",
+  "chdNoIds": [],
+  "parNoIds": ["bbbace48-11f3-4d5e-a69e-3e5ace37e0ee"],
+  "dialogs": [{
+    "spker": "???",
+    "convs": ["但是我不会害怕的！"]
+  }, {
+    "spker": "???",
+    "convs": ["不就是头野猪嘛，村长爷爷，你且等着，待我去收拾些家伙事儿，把它捉来！"]
+  }, {
+    "spker": "村长",
+    "convs": ["小伙子，你可别冲动啊！"]
+  }]
+}, {
+  "desc": "this is dialog",
+  "id": "d2d58751-7b47-417c-90cb-c86aadfac178",
+  "type": "dialog",
+  "chdNoIds": ["1ca2f648-fafb-46fe-ae32-a6b500b087ae"],
+  "parNoIds": ["bbbace48-11f3-4d5e-a69e-3e5ace37e0ee"],
+  "dialogs": [{
+    "spker": "???",
+    "convs": ["看来得请云先生出马了"]
+  }, {
+    "spker": "村长",
+    "convs": ["是啊，你快去看看，帮我请云先生过来。"]
+  }, {
+    "spker": "???",
+    "convs": ["好，我马上去"]
+  }, {
+    "spker": "旁白",
+    "convs": ["你一路小跑跑到了对面山上庙里", "推开土地庙偏殿的小门", "你发现，这里的床铺已经不见了，桌子上原来摆的笔墨纸砚也不见了"]
+  }, {
+    "spker": "旁白",
+    "convs": ["经过一番仔细检查，你发现房檐下的燕子窝外面，燕子父母盘旋飞着，却不进窝"]
+  }, {
+    "spker": "旁白",
+    "convs": ["你爬了上去，发现，燕子的窝里放了一个小小的包裹", "你把它取了出来，打开后，你发现了", "一封信、一本小册子、一小块玉片"]
+  }]
+}, {
+  "desc": "this is package change",
+  "id": "1ca2f648-fafb-46fe-ae32-a6b500b087ae",
+  "type": "package",
+  "chdNoIds": [],
+  "parNoIds": ["d2d58751-7b47-417c-90cb-c86aadfac178"],
+  "target": [{
+    "name": "虎豹拳法",
+    "id": "00001",
+    "desc": "据说是模仿虎豹的动作创建的拳法，长期习练可以强身健体",
+    "type": "功法"
+  }, {
+    "name": "未知的玉片",
+    "id": "00002",
+    "desc": "一块玉片，拿在手中有微微温润之感",
+    "type": "材料"
+  }, {
+    "name": "云先生的信",
+    "id": "00003",
+    "desc": "这是云先生留给村子的信",
+    "type": "材料"
+  }]
+}]

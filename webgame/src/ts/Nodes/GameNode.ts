@@ -1,10 +1,6 @@
 import {
     CreateElement, CreateElementWithClasses,
-    CreateElementWithid, CreateElementWithIdAndClasses, CreateInput,
-    CreateNumberInput,
-    CreateSelectInput,
-    CreateTextInput,
-    CreateTextsInput, UpdateOptionShower
+    CreateElementWithid, CreateElementWithIdAndClasses, CreateInput, UpdateOptionShower
 } from "../Utils/HtmlUtils";
 import {game_node_map, game_node_map_loaded} from "../../index";
 import {GameNode} from "./GameNodeItf";
@@ -17,7 +13,6 @@ const node_desc="_node_desc"
 export class BaseNode implements GameNode{
     desc: string = "";
     id: string = "";
-    params: string[][] = [];
     type: string = "Base";
     chdNoIds: string[] = [];
     parNoIds: string[] = [];
@@ -42,21 +37,15 @@ export class BaseNode implements GameNode{
         return this.chdNoIds;
     }
 
-    getParams(): string[][] {
-        return this.params;
-    }
-
     constructor(id:string, desc:string) {
         this.id = id;
         this.desc = desc;
-        this.params.push(["desc","string"]);
     }
 }
 
 export class BeginNode extends BaseNode{
     constructor(id: string, desc: string) {
         super(id, desc);
-        this.params.push(["type","show"])
     }
     type: string = "begin";
     getType(): string {
@@ -64,28 +53,38 @@ export class BeginNode extends BaseNode{
     }
 }
 
+export class Person{
+    name: string = ""
+    age: number = 0
+    race:string = ""
+    gender: string =""
+    level: number = 0
+    state:string = ""
+
+    constructor(name: string, age: number, race: string, gender: string, level: number, state:string) {
+        this.name = name;
+        this.age = age;
+        this.race = race;
+        this.gender = gender;
+        this.level = level;
+        this.state = state;
+    }
+}
+
 export class PersonNode extends BaseNode{
     type:string = "person"
-    name: string | undefined;
-    age: number | undefined;
-    gender: string | undefined;
+    people:Person[] = []
 
     getType(): string {
         return this.type;
     }
-    constructor(id:string,desc:string);
-    constructor(id:string, desc:string, name: string, age: number, gender: string);
-    constructor(id:string, desc:string, name?: string, age?: number, gender?: string) {
+    constructor(id:string, desc:string, people: Person[]) {
         super(id,desc)
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.params.push(["type","show"])
-        this.params.push(["name","string"])
-        this.params.push(["age","number"])
-        this.params.push(["sexes","enums"])
+        this.people = people
     }
 }
+
+
 export class GameDialog{
     constructor(spker: string, convs: string[]) {
         this.spker = spker;
@@ -109,8 +108,6 @@ export class DialogNode extends BaseNode{
     }
     constructor(id:string, desc:string, dialogs?:string[]) {
         super(id,desc)
-        this.params.push(["type","show"])
-        this.params.push(["dialogs","modal"])
     }
 }
 export class PackageNode extends BaseNode{
@@ -121,8 +118,6 @@ export class PackageNode extends BaseNode{
     }
     constructor(id:string, desc:string) {
         super(id,desc)
-        this.params.push(["type","show"])
-        this.params.push(["修改包裹","modal"])
     }
 }
 
@@ -137,9 +132,7 @@ export function SetOptions(node:any, father:HTMLElement) {
     father.innerHTML=""
     const nodeId = CreateElementWithid("div", node.id+"_option", node.id, father)
     nodeId.classList.add("continer")
-    for (const paramsStr of node.params) {
-        CreateInput(node.id, paramsStr[0], paramsStr[1], father)
-    }
+    CreateInput(node.id,"change "+node.type, father)
 }
 
 export function CreateNodeAndView(node:GameNode, father:HTMLElement) {
@@ -156,18 +149,3 @@ export function CreateNodeAndView(node:GameNode, father:HTMLElement) {
     nodeId.classList.add(node.getType())
     return nodeId
 }
-    // switch (node.getType()) {
-    //     case "begin":
-    //         nodeId.classList.add("begin")
-    //         break;
-    //     case "person":
-    //         nodeId.classList.add("person")
-    //         break;
-    //     case "dialog":
-    //         nodeId.classList.add("dialog")
-    //         break;
-    //     case "package":
-    //         nodeId.classList.add()
-    //     default:
-    //         break;
-    // }

@@ -1,9 +1,13 @@
 import $ from 'jquery'
-import {game_node_map} from '../../index'
-import {DialogNode, Refresh} from '../Nodes/GameNode'
-import {DialogModalRun, UpdateDialogContext} from "./DialogModel";
+import {DeleteNode, game_node_map} from '../../index'
 import {GameNode} from "../Nodes/GameNodeItf";
-import {PackageModalRun, UpdatePackageContext} from "./PackageModal";
+import {BaseModal, DialogModal, PackageModal, PersonModal} from "./BaseModal";
+import {DialogNode, PackageNode, PersonNode} from "../Nodes/GameNode";
+
+const personModal = new PersonModal()
+const packageModal = new PackageModal()
+const dialogModal = new DialogModal()
+let contextShower = document.getElementById('options_shower') as HTMLElement;
 export function CreateElement(tag:string, innerText:string, father:HTMLElement) {
     var element = document.createElement(tag)
     element.innerText = innerText
@@ -44,59 +48,65 @@ export function CreateNumberInput(id:string, name:string,value:number, fatherId:
     input_button.value=String(value)
     input_button.id = id+"_"+name+"_input"
 }
-// export function CreateDialogInput(id:string, name:string, fatherId:HTMLElement) {
-//     CreateElementWithClasses("button",name,fatherId,["form-control"]).addEventListener("click", () => DialogModalRun(id))
-// }
 function CreateModal(id:string, name:string, fatherId:HTMLElement, func:any) {
     CreateElementWithClasses("button", name, fatherId,["form-control"]).addEventListener("click", () => func(id))
 }
-const ModalFuncMap = new Map([
-    ["dialogModal", DialogModalRun],
-    ["packageModal", PackageModalRun]
-    ])
-export function CreateInput(id:string, name:string, type:string, fatherId:HTMLElement) {
-    if (type == "show") {
 
-    } else if(type == "dialogaa") {
-        //CreateDialogInput(id, name, fatherId)
-    } else {
-        const div = CreateElementWithClasses("form", "", fatherId, ["input-group", "mb-3"]);
-        const before = CreateElementWithClasses("div", "", div, ["input-group-prepend"])
-        switch (type) {
-            case "string":
-                CreateTextInput(id, name, game_node_map.get(id)[name], div)
-                break;
-            case "number":
-                CreateNumberInput(id, name,game_node_map.get(id)[name], div)
-                break;
-            case "texts":
-                CreateTextsInput(id, name, game_node_map.get(id)[name], div)
-                break;
-            case "modal":
-                CreateModal(id, name, fatherId, ModalFuncMap.get(game_node_map.get(id)["type"]+"Modal"))
-            default:
-                break;
-        }
-        const after = CreateElementWithClasses("div", "", div, ["input-group-append"])
-        CreateElementWithClasses("span", name, before, ["input-group-text"]);
-        let submit = CreateElementWithClasses("button", "ok", after, ["input-group-text"]) as HTMLButtonElement;
-        div.addEventListener('submit', function (event: Event) {
-            event.preventDefault()
-            let content = document.getElementById(id + "_" + name + "_input")! as HTMLInputElement
-            if(type == "number") {
-                game_node_map.get(id)[name] = Number(content.value)
-            } else {
-                game_node_map.get(id)[name] = content.value
-            }
-            Refresh(id)
-        });
-        CreateElement("br", "", div);
+let ModalMap: Map<string, BaseModal>;
+// @ts-ignore
+ModalMap = new Map([
+    ["person",personModal],
+    ["dialog", dialogModal],
+    ["package", packageModal],
+]);
+export function DeleteNodeView(id:string) {
+    let node = document.getElementById(id)!
+    node.parentNode!.removeChild(node);
+    document.getElementById("options_shower")!.innerHTML=""
+    document.getElementById("options_home")!.innerHTML=""
+}
+export function CreateInput(id:string, name:string, fatherId:HTMLElement) {
+    CreateElementWithClasses("button", name, fatherId,["form-control"]).addEventListener("click", () => {
+        console.log(game_node_map.get(id).type)
+        ModalMap.get(game_node_map.get(id).type)!.Init(id)
+    })
+    CreateElementWithClasses("button", "delete", fatherId,["form-control"]).addEventListener("click", () => {
+        DeleteNode(id)
+    })
+}
+export function UpdatePersonContext(id:string) {
+    contextShower.innerHTML = ""
+    for (const item of (game_node_map.get(id) as PersonNode).people){
+        let oneline1 = CreateElementWithClasses("div","", contextShower,["row"])!
+        CreateElement("text","新增", oneline1).style.width="10%"
+        CreateElement("text",item.name, oneline1).style.width="20%"
+        CreateElement("text","种族："+item.race, oneline1).style.width="30%"
+        CreateElement("text","境界："+item.state, oneline1).style.width="30%"
+        let oneline2 = CreateElementWithClasses("div","", contextShower,["row"])!
+        CreateElement("text","性别："+item.gender, oneline2).style.width="33%"
+        CreateElement("text","年龄："+item.age, oneline2).style.width="33%"
+        CreateElement("text","等级："+item.level, oneline2).style.width="33%"
     }
 }
-function UpdatePersonContext(id:string) {
-    return id
+export function UpdatePackageContext(id:string) {
+    contextShower.innerHTML = ""
+    CreateElementWithClasses("text","包裹", contextShower,["col-3"])
+    for (const item of (game_node_map.get(id) as PackageNode).target){
+        let oneline = CreateElementWithClasses("div","", contextShower,["row"])!
+        CreateElementWithClasses("text","新增", oneline,["col-2"])
+        CreateElementWithClasses("text",item.type, oneline,["col-2"])
+        CreateElementWithClasses("text",item.name, oneline,["col-8"])
+    }
 }
 
+export function UpdateDialogContext(id:string) {
+    contextShower.innerHTML = ""
+    for (const dialogOne of (game_node_map.get(id) as DialogNode).getDialog()){
+        let oneline = CreateElementWithClasses("div","", contextShower,["row"])!
+        CreateElementWithClasses("text",dialogOne.spker, oneline,["col-2"])
+        CreateElementWithClasses("pre",dialogOne.convs.join('\n'), oneline,["option_show", "col-10"])
+    }
+}
 export function UpdateOptionShower(id:string) {
     let contextShower = document.getElementById('options_shower') as HTMLElement;
     let UpdateMap = new Map([
@@ -143,7 +153,6 @@ export function GetBottomPosition(lastNodeId:string, size:number) {
     }
     return [positionLeft - width * size, top]
 }
-
 /*
 设置组件的位置
  */

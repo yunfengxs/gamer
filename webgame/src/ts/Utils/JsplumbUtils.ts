@@ -1,5 +1,6 @@
 import {game_node_map, game_node_map_loaded} from "../../index";
 import {GameNode} from "../Nodes/GameNodeItf";
+import {DeleteNodeView} from "./HtmlUtils";
 
 export function SetJsplumb(jsplumbInstance:any, uuid_jsplumb:string) {
     /* global jsPlumb */
@@ -68,8 +69,13 @@ export function InitJsPlumb(jsplumbInstance:any) {
                 return false
             }
         })
-        jsplumbInstance.bind('beforeDetach', function (info:any) {
-            console.log(info.targetId + "??????" + info.sourceId)
+
+        jsplumbInstance.bind('connectionDetached', function (info:any) {
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            let index1 = game_node_map.get(info.targetId)!.getParentNodeIds()!.indexOf(info.sourceId)
+            let index2 = game_node_map.get(info.sourceId)!.getChildrenNodeIds()!.indexOf(info.targetId)
+            game_node_map.get(info.targetId)!.getParentNodeIds()!.splice(index1, 1)
+            game_node_map.get(info.sourceId)!.getChildrenNodeIds()!.splice(index2, 1)
         })
     });
 }
@@ -109,7 +115,7 @@ function CheckCircle(nodes: Map<string,GameNode>): boolean {
 export function SetConnectionJsplumb(jsplumbInstance:any, recs:string, tar:string) {
     /* global jsPlumb */
     // @ts-ignore
-    jsPlumb.ready(function(){
+    jsplumbInstance.ready(function(){
         jsplumbInstance.connect({ uuids: ["btm"+recs, "top"+tar] })
     });
 }
@@ -118,6 +124,30 @@ export function ClearJsplumb (jsplumbInstance:any, uuid:string) {
     /* global jsPlumb */
     // @ts-ignore
     jsPlumb.ready(function(){
+        console.log(uuid)
         jsplumbInstance.remove(uuid)
     });
+}
+
+export function DeleteJsplumbNode (jsplumbInstance:any, uuid:string) {
+    /* global jsPlumb */
+    // @ts-ignore
+    jsPlumb.ready(function(){
+        let connections = jsplumbInstance.getAllConnections();
+        for (let i = 0; i < connections.length; i++) {
+            let connection = connections[i];
+            if (connection.sourceId === uuid || connection.targetId === uuid) {
+                jsplumbInstance.deleteConnection(connection);
+            }
+        }
+        // 获取节点的所有端点，并删除
+        var endpoints = jsplumbInstance.getEndpoints(uuid);
+        for (var j = 0; j < endpoints.length; j++) {
+            // 删除端点
+            jsplumbInstance.deleteEndpoint(endpoints[j]);
+        }
+        DeleteNodeView(uuid)
+        game_node_map.delete(uuid)
+    });
+
 }
