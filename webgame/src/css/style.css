@@ -89,3 +89,18 @@
 .load_bt{
     background: #78a8ed;
 }
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+.input-group label {
+    margin-right: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+.input-group input {
+    flex: 1;
+    margin-right: 10px;
+}

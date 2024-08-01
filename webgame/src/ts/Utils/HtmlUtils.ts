@@ -2,7 +2,8 @@ import $ from 'jquery'
 import {DeleteNode, game_node_map} from '../../index'
 import {GameNode} from "../Nodes/GameNodeItf";
 import {BaseModal, DialogModal, PackageModal, PersonModal} from "./BaseModal";
-import {DialogNode, PackageNode, PersonNode} from "../Nodes/GameNode";
+import {DialogNode, PackageNode, PersonNode, Refresh} from "../Nodes/GameNode";
+import "../../css/style.css"
 
 const personModal = new PersonModal()
 const packageModal = new PackageModal()
@@ -66,6 +67,20 @@ export function DeleteNodeView(id:string) {
     document.getElementById("options_home")!.innerHTML=""
 }
 export function CreateInput(id:string, name:string, fatherId:HTMLElement) {
+    const div = CreateElementWithClasses("div", "", fatherId, ["input-group", "mb-3"]);
+    CreateElementWithClasses("label", "desc", div, ["mb-3"]).setAttribute('for','inputField');
+
+    let input = CreateElementWithClasses("input", "desc", div, ["form-control"]) as HTMLInputElement
+    input.type = "text"
+    input.id = "options_"+id+"_desc"
+
+    let submit = CreateElementWithClasses("button", "ok", div, ["btn", "btn-primary"]) as HTMLButtonElement;
+    submit.onclick = () => {
+        let content = document.getElementById("options_"+id+"_desc")! as HTMLInputElement
+        game_node_map.get(id).desc = content.value
+        Refresh(id)
+    }
+    CreateElement("br", "", div);
     CreateElementWithClasses("button", name, fatherId,["form-control"]).addEventListener("click", () => {
         console.log(game_node_map.get(id).type)
         ModalMap.get(game_node_map.get(id).type)!.Init(id)

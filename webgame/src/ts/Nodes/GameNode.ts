@@ -122,9 +122,7 @@ export class PackageNode extends BaseNode{
 }
 
 export function Refresh(id:string){
-    let id_node_name = document.getElementById(id+node_name)!
     let id_node_desc = document.getElementById(id+node_desc)!
-    id_node_name.innerText = game_node_map.get(id)!.getType()
     id_node_desc.innerText = game_node_map.get(id)!.getDesc()
 }
 
