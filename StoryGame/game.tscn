@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://dkb1d2w1grm6p"]
+
+[ext_resource type="Script" path="res://game.gd" id="1_0rj2q"]
+
+[node name="game" type="Node2D"]
+script = ExtResource("1_0rj2q")
+
+[node name="Bag" type="Button" parent="."]
+offset_left = 2.0
+offset_top = 575.0
+offset_right = 196.0
+offset_bottom = 647.0
+text = "Package"
