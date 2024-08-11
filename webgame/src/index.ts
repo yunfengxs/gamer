@@ -16,15 +16,13 @@ import {
     BaseNode,
     BeginNode,
     CreateNodeAndView,
-    DialogNode,
+    DialogNode, EventNode,
     PackageNode,
     PersonNode,
     SetOptions
 } from "./ts/Nodes/GameNode";
 import {jsPlumb} from "jsplumb";
 import {ClearJsplumb, DeleteJsplumbNode, InitJsPlumb, SetConnectionJsplumb, SetJsplumb} from "./ts/Utils/JsplumbUtils";
-//import {GameNode} from "./ts/Nodes/GameNodeItf";
-import {addRow, saveData} from "./ts/Utils/DialogModel";
 import {GameNode} from "./ts/Nodes/GameNodeItf";
 let settings = ["person","event","dialog","attribute","package"]
 
@@ -101,8 +99,6 @@ function InitSettings(){
                     let person = new PersonNode(uuid,"this is test node", [])
                     AddNewNodeDiv(person, xPos, yPos)
                     break;
-                case "event":
-                    break;
                 case "dialog":
                     let dialog = new DialogNode(uuid,"this is dialog")
                     AddNewNodeDiv(dialog, xPos, yPos)
@@ -110,6 +106,10 @@ function InitSettings(){
                 case "package":
                     let packageNode = new PackageNode(uuid,"this is package change")
                     AddNewNodeDiv(packageNode, xPos, yPos)
+                    break;
+                case "event":
+                    let eventNode = new EventNode(uuid,"this is event change")
+                    AddNewNodeDiv(eventNode, xPos, yPos)
                     break;
                 default:
                     break;
@@ -122,13 +122,7 @@ function InitNodesView() {
     InitSettings()
 }
 
-function InitModals() {
-    document.getElementById('DialogAddRowBtn')?.addEventListener('click', () => addRow('DialogModalRowsContainer'));
-    document.getElementById('DialogModalSaveBtn')?.addEventListener('click', saveData);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    InitModals()
     InitNodesView()
     InitJsPlumb(jsPlumbInstance)
 });

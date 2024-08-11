@@ -120,6 +120,25 @@ export class PackageNode extends BaseNode{
         super(id,desc)
     }
 }
+export class Condition{
+    type: string = ""
+    cond1:string = ""
+    cond2:string = ""
+
+    constructor(type: string, cond1: string, cond2: string) {
+        this.type = type;
+        this.cond1 = cond1;
+        this.cond2 = cond2;
+    }
+}
+export class EventNode extends BaseNode{
+    type:string = "event"
+    condition:Condition = new Condition("","","")
+    branch:number = 0
+    constructor(id: string, desc: string) {
+        super(id, desc);
+    }
+}
 
 export function Refresh(id:string){
     let id_node_desc = document.getElementById(id+node_desc)!

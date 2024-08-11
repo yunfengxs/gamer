@@ -1,11 +1,8 @@
 import {Item} from "../Nodes/Items";
-import {CreateElement, CreateElementWithClasses, UpdatePersonContext} from "./HtmlUtils";
+import {CreateElement, CreateElementWithClasses} from "./HtmlUtils";
 import {game_node_map} from "../../index";
-import {UpdatePackageContext} from "./PackageModal";
 import "../../css/BaseModal.css"
-import {DialogNode, GameDialog, Person} from "../Nodes/GameNode";
-import {UpdateDialogContext} from "./DialogModel";
-import Modal from "bootstrap/js/dist/modal";
+import {Condition, DialogNode, GameDialog, PackageNode, Person, PersonNode} from "../Nodes/GameNode";
 
 class OneRow{
     label:string = ""
@@ -31,6 +28,7 @@ export class BaseModal {
     baseAddRowBtn: HTMLElement | undefined;
     baseSaveBtn: HTMLElement | undefined;
     baseCloseBtn: HTMLElement | undefined;
+    contextShower: HTMLElement = document.getElementById("options_shower")!;
 
     Init(id:string) {
         this.baseModal = document.getElementById("BaseModal")!;
@@ -59,6 +57,9 @@ export class BaseModal {
     }
     Save(id:string) {
         console.log("this is base modal " + id)
+    }
+    UpdateShowerContext(id:string) {
+
     }
     AddOneRaw(fields:OneRow[]) {
         const row = CreateElementWithClasses("div","",this.baseModalContainer!, ["row-modal"])
@@ -121,6 +122,16 @@ export class PackageModal extends BaseModal {
         fields.push(new OneRow("描述:","text","5%","45%",item.desc,[],[]))
         return fields
     }
+    UpdateShowerContext(id:string) {
+        this.contextShower!.innerHTML = ""
+        CreateElementWithClasses("text","包裹", this.contextShower!,["col-3"])
+        for (const item of (game_node_map.get(id) as PackageNode).target){
+            let oneline = CreateElementWithClasses("div","", this.contextShower!,["row"])!
+            CreateElementWithClasses("text","新增", oneline,["col-2"])
+            CreateElementWithClasses("text",item.type, oneline,["col-2"])
+            CreateElementWithClasses("text",item.name, oneline,["col-8"])
+        }
+    }
     Save(id:string) {
         const rows = Array.from(this.baseModalContainer!.getElementsByClassName("row-modal"));
         let items = new Array()
@@ -131,7 +142,7 @@ export class PackageModal extends BaseModal {
         }
         game_node_map.get(id).target = items
         this.CommonSave(id)
-        UpdatePackageContext(id)
+        this.UpdateShowerContext(id)
     }
 }
 
@@ -150,6 +161,14 @@ export class DialogModal extends BaseModal {
         fields.push(new OneRow("dialog:","textarea","7%","70%","",[], item.convs))
         return fields
     }
+    UpdateShowerContext(id:string) {
+        this.contextShower!.innerHTML = ""
+        for (const dialogOne of (game_node_map.get(id) as DialogNode).getDialog()){
+            let oneline = CreateElementWithClasses("div","", this.contextShower!,["row"])!
+            CreateElementWithClasses("text",dialogOne.spker, oneline,["col-2"])
+            CreateElementWithClasses("pre",dialogOne.convs.join('\n'), oneline,["option_show", "col-10"])
+        }
+    }
     Save(id:string) {
         const rows = Array.from(this.baseModalContainer!.getElementsByClassName("row-modal"));
         let items:GameDialog[] = new Array()
@@ -160,7 +179,7 @@ export class DialogModal extends BaseModal {
         }
         game_node_map.get(id).dialogs = items
         this.CommonSave(id)
-        UpdateDialogContext(id)
+        this.UpdateShowerContext(id)
     }
 }
 
@@ -183,6 +202,20 @@ export class PersonModal extends BaseModal{
         fields.push(new OneRow("境界:","select","5%","10%",item.state,["凡人","武者","锻体","练气","筑基","金丹","元婴","飞升"],[]))
         return fields
     }
+    UpdateShowerContext(id:string) {
+        this.contextShower!.innerHTML = ""
+        for (const item of (game_node_map.get(id) as PersonNode).people){
+            let oneline1 = CreateElementWithClasses("div","", this.contextShower!,["row"])!
+            CreateElement("text","新增", oneline1).style.width="10%"
+            CreateElement("text",item.name, oneline1).style.width="20%"
+            CreateElement("text","种族："+item.race, oneline1).style.width="30%"
+            CreateElement("text","境界："+item.state, oneline1).style.width="30%"
+            let oneline2 = CreateElementWithClasses("div","", this.contextShower!,["row"])!
+            CreateElement("text","性别："+item.gender, oneline2).style.width="33%"
+            CreateElement("text","年龄："+item.age, oneline2).style.width="33%"
+            CreateElement("text","等级："+item.level, oneline2).style.width="33%"
+        }
+    }
     Save(id:string) {
         const rows = Array.from(this.baseModalContainer!.getElementsByClassName("row-modal"));
         let items:Person[] = new Array()
@@ -199,6 +232,43 @@ export class PersonModal extends BaseModal{
         }
         game_node_map.get(id).people = items
         this.CommonSave(id)
-        UpdatePersonContext(id)
+        this.UpdateShowerContext(id)
+    }
+}
+export class EventModal extends BaseModal{
+    Add() {
+        this.AddOneRaw(this.GetOneRow(new Condition("","","")))
+    }
+    GetOneRow(item:Condition) {
+        let fields : OneRow[] = []
+        fields.push(new OneRow("条件:","select","5%","10%",item.type,["存在","不存在","大于","小于","等于"],[]))
+        fields.push(new OneRow("","select","5%","10%","",["物品","状态","属性","时间"],[]))
+        fields.push(new OneRow("内容1:","text","10%","20%",item.type,[],[]))
+        fields.push(new OneRow("","select","5%","10%","",["部位","时间"],[]))
+        fields.push(new OneRow("内容2:","text","10%","20%",item.type,[],[]))
+        return fields
+    }
+    Save(id:string) {
+        const rows = Array.from(this.baseModalContainer!.getElementsByClassName("row-modal"));
+        const inputs = rows[0].querySelectorAll("input")!;
+        const selects = rows[0].querySelectorAll("select")!;
+        game_node_map.get(id).condition = new Condition(
+            selects[0] ? selects[0].value : '',
+            (selects[1] ? selects[1].value : '') + inputs[0].value,
+            (selects[2] ? selects[2].value : '') + inputs[1].value)
+        this.CommonSave(id)
+        this.UpdateShowerContext(id)
+    }
+    UpdateShowerContext(id:string) {
+        this.contextShower!.innerHTML = ""
+        let condition = game_node_map.get(id).condition
+        let oneline1 = CreateElementWithClasses("div","", this.contextShower!,["row"])!
+        CreateElement("text","if", oneline1).style.width="10%"
+        CreateElement("text",condition.type, oneline1).style.width="20%"
+        CreateElement("text",condition.cond1, oneline1).style.width="35%"
+        CreateElement("text",condition.cond2, oneline1).style.width="35%"
+    }
+    Restore(id:string) {
+        this.AddOneRaw(this.GetOneRow(game_node_map.get(id).condition))
     }
 }
