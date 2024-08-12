@@ -7,6 +7,7 @@ func _ready():
 	GameLoader.init()
 	procNode(GameLoader.AllNodes.get("Begin"))
 	$Bag.pressed.connect(_on_open_bag_pressed)
+	$Equipment.pressed.connect(_on_open_equipment_pressed)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -174,3 +175,8 @@ func _on_remove_item_pressed(slot_index):
 	# 你可以在这里更新UI以显示该槽位为空
 	var item_slot = get_node(str(slot_index))
 	item_slot.add_icon_override("icon", preload("res://icon.svg"))
+	
+func _on_open_equipment_pressed():
+	var equipment = load("res://equipment.tscn")
+	var equipment_ins = equipment.instantiate()
+	add_child(equipment_ins)

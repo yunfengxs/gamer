@@ -11,3 +11,10 @@ offset_top = 575.0
 offset_right = 196.0
 offset_bottom = 647.0
 text = "Package"
+
+[node name="Equipment" type="Button" parent="."]
+offset_left = 197.0
+offset_top = 575.0
+offset_right = 391.0
+offset_bottom = 647.0
+text = "Equipment"
